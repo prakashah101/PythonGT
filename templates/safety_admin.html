@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06101d">
+  <title>Safety Report Review | Grapsy</title>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+</head>
+<body>
+  <main class="legal-page">
+    <article class="legal-card legal-content">
+      <p class="legal-kicker">Grapsy · Admin</p>
+      <h1>Safety report review</h1>
+      <p><a href="/safety">← Safety Center</a></p>
+      {% if reports %}
+        {% for item in reports %}
+        <section class="admin-report">
+          <div class="admin-report-top"><strong>Report #{{ item.report.id }} · {{ item.report.reason }}</strong><span>{{ to_nepal_time(item.report.created_at).strftime('%b %d, %Y · %H:%M NPT') }} · {{ item.report.status.replace('_', ' ') }}</span></div>
+          <p>Reported account: {{ item.target_name }} · Reported by: {{ item.reporter_name }}{% if item.report.reported_message_id %} · Message #{{ item.report.reported_message_id }}{% endif %}</p>
+          {% if item.message_excerpt %}<p><strong>Reported message excerpt:</strong><br>{{ item.message_excerpt }}</p>{% endif %}
+          {% if item.report.details %}<p><strong>Reporter details:</strong><br>{{ item.report.details }}</p>{% endif %}
+          <form method="post" action="/admin/safety-reports/{{ item.report.id }}/status">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label class="sr-only" for="report-status-{{ item.report.id }}">Report status</label>
+            <select id="report-status-{{ item.report.id }}" name="status">
+              <option value="open" {% if item.report.status == 'open' %}selected{% endif %}>Open</option>
+              <option value="in_review" {% if item.report.status == 'in_review' %}selected{% endif %}>In review</option>
+              <option value="resolved" {% if item.report.status == 'resolved' %}selected{% endif %}>Resolved</option>
+              <option value="dismissed" {% if item.report.status == 'dismissed' %}selected{% endif %}>Dismissed</option>
+            </select>
+            <button class="safety-action" type="submit">Update status</button>
+          </form>
+        </section>
+        {% endfor %}
+      {% else %}<p>There are no reports to review.</p>{% endif %}
+    </article>
+  </main>
+  {% include "legal_footer.html" %}
+</body>
+</html>

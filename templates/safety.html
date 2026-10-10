@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06101d">
+  <title>Safety Center | Grapsy</title>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+  <script src="/static/js/safety-tools.js" defer></script>
+</head>
+<body data-safety-csrf="{{ csrf_token }}">
+  <main class="legal-page">
+    <article class="legal-card legal-content">
+      <p class="legal-kicker">Grapsy · Community care</p>
+      <h1>Safety Center</h1>
+      <p class="legal-updated">Tools for a respectful learning community</p>
+      <div class="legal-callout">Keep passwords, API keys, private records, and personal contact details out of public projects and AI chats. If someone makes you feel unsafe, block them and send a report.</div>
+
+      <h2>Block an account</h2>
+      <ul>
+        <li>Blocking removes the follow connection in both directions.</li>
+        <li>Neither account can message or follow the other while the block is active.</li>
+        <li>You will no longer see each other’s public community projects in Grapsy.</li>
+        <li>Unblocking does not restore follows; either person can follow again later.</li>
+      </ul>
+      {% if user %}
+      <section aria-labelledby="blocked-title">
+        <h3 id="blocked-title">Blocked accounts</h3>
+        {% if blocked_users %}
+        <div class="blocked-list">
+          {% for blocked in blocked_users %}
+          <div class="blocked-user"><span><strong>{{ blocked.first_name }} {{ blocked.last_name }}</strong><small>@{{ blocked.username }}</small></span><button class="safety-action" type="button" data-safety-unblock-user="{{ blocked.id }}">Unblock</button></div>
+          {% endfor %}
+        </div>
+        {% else %}<p>You have not blocked anyone.</p>{% endif %}
+      </section>
+
+      <section aria-labelledby="report-history-title">
+        <h3 id="report-history-title">Your reports</h3>
+        {% if reports %}
+          {% for report in reports %}
+          <div class="safety-report-row"><span><strong>{{ report.reason }}</strong><small>About @{{ report.reported_username }} · {{ to_nepal_time(report.created_at).strftime('%b %d, %Y · %H:%M NPT') }}</small></span><span class="report-status">{{ report.status.replace('_', ' ') }}</span></div>
+          {% endfor %}
+        {% else %}<p>You have not sent a report.</p>{% endif %}
+      </section>
+      {% else %}
+      <p><a href="/login">Log in</a> to manage your blocked accounts and view report history.</p>
+      {% endif %}
+
+      <h2>Report a concern</h2>
+      <p>Use the Report button on a user or message to tell Grapsy’s operator about harassment, spam, inappropriate content, or a safety concern. Reports are limited to ten per account in a 24-hour period. A moderator can review submitted reports and update their status.</p>
+      <p>For urgent danger, contact local emergency services. Grapsy is not an emergency response service.</p>
+      <p>Questions or privacy requests: <a href="mailto:grapsy.app@gmail.com">grapsy.app@gmail.com</a>.</p>
+      {% if is_admin %}<p><a class="safety-action" href="/admin/safety-reports">Open report review queue</a></p>{% endif %}
+    </article>
+  </main>
+  {% include "legal_footer.html" %}
+</body>
+</html>

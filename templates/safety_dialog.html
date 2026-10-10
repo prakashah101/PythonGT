@@ -1,0 +1,24 @@
+<dialog class="safety-dialog" id="safety-report-dialog" aria-labelledby="safety-report-title">
+  <form id="safety-report-form">
+    <h2 id="safety-report-title">Report a safety concern</h2>
+    <p>Reports are private to Grapsy’s safety review. Include only information needed to explain the concern.</p>
+    <input type="hidden" id="safety-report-user-id" name="reported_user_id">
+    <input type="hidden" id="safety-report-message-id" name="message_id">
+    <label for="safety-report-reason">Reason
+      <select id="safety-report-reason" name="reason" required>
+        <option value="" selected disabled>Choose a reason</option>
+        <option>Harassment or bullying</option>
+        <option>Spam or scam</option>
+        <option>Inappropriate content</option>
+        <option>Threats or safety concern</option>
+        <option>Other</option>
+      </select>
+    </label>
+    <label for="safety-report-details">Details <span>(optional)</span>
+      <textarea id="safety-report-details" name="details" maxlength="1000" placeholder="Tell us what happened (up to 1000 characters)."></textarea>
+    </label>
+    <p class="safety-report-status" id="safety-report-status" role="status" aria-live="polite"></p>
+    <div class="safety-dialog-actions"><button type="button" data-safety-close>Cancel</button><button type="submit">Send report</button></div>
+  </form>
+</dialog>
+<div class="safety-toast" id="safety-toast" role="status" aria-live="polite" hidden></div>

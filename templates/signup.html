@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071426">
+  <title>Create account | Grapsy</title>
+  <link rel="stylesheet" href="/static/css/signup.css">
+  <style>
+    .social-signup-shell{position:relative;z-index:1;width:min(490px,100%);margin:auto;padding:clamp(30px,6vw,54px);overflow:hidden;text-align:center;background:linear-gradient(155deg,#0d2038ed,#061326f2);border:1px solid var(--gold-line);border-radius:28px;box-shadow:0 32px 90px -38px #000e,inset 0 1px #ffffff12;backdrop-filter:blur(18px);animation:signup-enter .65s cubic-bezier(.2,.75,.25,1) both}
+    .signup-brand{display:inline-flex;align-items:center;gap:11px;margin-bottom:34px;color:var(--ink);font-size:1.15rem;font-weight:800;letter-spacing:.02em;text-decoration:none}
+    .signup-brand img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 0 14px #f2b13435)}
+    .signup-kicker{display:block;margin-bottom:10px;color:var(--gold-light);font-size:.73rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .social-signup-shell h1{margin:0;color:#fff;font:700 clamp(2.2rem,8vw,3.15rem)/1.05 var(--display)}
+    .signup-subtitle{max-width:340px;margin:14px auto 29px;color:var(--muted);font-size:.94rem;line-height:1.75}
+    .provider-list{display:grid;gap:13px}
+    .provider-button{position:relative;display:flex;min-height:56px;align-items:center;justify-content:center;gap:12px;padding:12px 18px;border:1px solid #ffffff24;border-radius:14px;background:#ffffff09;color:var(--ink);font:700 .94rem var(--body);text-decoration:none;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+    .provider-button:hover{transform:translateY(-2px);border-color:#f2b1348c;background:#ffffff12;box-shadow:0 12px 26px #0003}
+    .provider-button:active{transform:translateY(0)}
+    .provider-mark{display:grid;width:24px;height:24px;place-items:center;font:800 1.15rem Arial,sans-serif}
+    .google-mark{color:#fff;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 25% 48%,#fbbc05 48% 72%,#ea4335 72%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .facebook-mark{color:#1877f2;font:bold 1.45rem Arial,sans-serif}
+    .signup-error{min-height:22px;margin:12px 0 0;color:var(--error-soft);font-size:.82rem}
+    .signup-footer{margin:25px 0 0;padding-top:20px;border-top:1px solid #ffffff15;color:var(--muted);font-size:.86rem}
+    .signup-footer a{color:var(--gold-light);font-weight:800;text-decoration:none}
+    .signup-footer a:hover{text-decoration:underline;text-underline-offset:4px}
+    .legal-consent{display:flex;align-items:flex-start;gap:10px;margin:18px 0 4px;color:#a9b7c9;text-align:left;font-size:.78rem;line-height:1.6}
+    .legal-consent input{width:17px;height:17px;flex:none;margin:2px 0 0;accent-color:#f2b134}
+    .legal-consent a{color:#f7d98c;font-weight:750;text-underline-offset:3px}
+    .signup-note{margin-top:21px;color:#74859e;font-size:.73rem}
+    @keyframes signup-enter{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @media(max-width:480px){.signup-body{padding:16px}.social-signup-shell{border-radius:22px}.signup-brand{margin-bottom:27px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+  </style>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+</head>
+<body class="signup-body" data-terms-csrf="{{ terms_csrf }}">
+  <div class="background" aria-hidden="true"><div class="gradient-orb orb-1"></div><div class="gradient-orb orb-2"></div></div>
+  <main class="social-signup-shell">
+    <a class="signup-brand" href="/" aria-label="Grapsy home"><img src="/static/img/logo-badge.png" alt=""><span>Grapsy</span></a>
+    <span class="signup-kicker">Start learning Python</span>
+    <h1>Create your account</h1>
+    <p class="signup-subtitle">Choose an account to get started with your personal Python teacher.</p>
+    <label class="legal-consent"><input id="terms-consent" type="checkbox"><span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms and Conditions</a> and have read the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+    <div class="provider-list" aria-label="Sign up options">
+      <a class="provider-button" href="/auth/google?flow=signup"><span class="provider-mark google-mark" aria-hidden="true">G</span><span>Continue with Google</span></a>
+      <a class="provider-button" href="/auth/facebook?flow=signup"><span class="provider-mark facebook-mark" aria-hidden="true">f</span><span>Continue with Facebook</span></a>
+    </div>
+    <p class="signup-error" id="signupError" role="alert" aria-live="polite"></p>
+    <p class="signup-footer">Already have an account? <a href="/login">Log in</a></p>
+    <p class="signup-note">Your learning journey starts one line of code at a time.</p>
+  </main>
+  <script>
+    const messages = {
+      provider_unconfigured: "This sign-up provider is not configured yet. Grapsy needs its OAuth client ID and secret in the server .env file.",
+      email_unverified: "The provider did not return a verified email address.",
+      oauth_failed: "Sign-up could not be completed. Please try again.",
+      terms_required: "Please accept the Terms and Conditions and Privacy Policy before continuing."
+    };
+    const signupError = document.getElementById("signupError");
+    const consent = document.getElementById("terms-consent");
+    signupError.textContent = messages[new URLSearchParams(location.search).get("error")] || "";
+    document.querySelectorAll(".provider-button").forEach(link => link.addEventListener("click", async event => {
+      event.preventDefault();
+      if (!consent.checked) {
+        signupError.textContent = "Please accept the Terms and Conditions and Privacy Policy before continuing.";
+        consent.focus();
+        return;
+      }
+      link.setAttribute("aria-disabled", "true");
+      signupError.textContent = "Saving your consent…";
+      const form = new FormData();
+      form.append("accepted", "yes");
+      form.append("csrf_token", document.body.dataset.termsCsrf);
+      try {
+        const response = await fetch("/api/legal/accept", { method: "POST", body: form, headers: { Accept: "application/json" } });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || "Could not save consent.");
+        location.assign(link.href);
+      } catch (error) {
+        signupError.textContent = error.message || "Could not continue. Please refresh and try again.";
+        link.removeAttribute("aria-disabled");
+      }
+    }));
+  </script>
+  {% include "legal_footer.html" %}
+</body>
+</html>

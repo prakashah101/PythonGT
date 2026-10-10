@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PythonGT | Grapsy</title>
+  <style>
+    :root { color-scheme:dark; --bg:#06101d; --panel:#101f32; --line:#273b53; --text:#f3f6fb; --muted:#a9b7c9; --gold:#f2b134; --blue:#78b7ff; --cyan:#36d9ff; --green:#73d69a; --mono:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    * { box-sizing:border-box; }
+    body { position:relative; isolation:isolate; min-height:100vh; margin:0; overflow-x:hidden; background:radial-gradient(ellipse at 15% 0,#132b45 0,transparent 48%),var(--bg); color:var(--text); font:16px/1.6 system-ui,Segoe UI,sans-serif; }
+    body::before { position:fixed; z-index:-1; inset:0; content:""; pointer-events:none; opacity:.1; background-image:linear-gradient(#78b7ff20 1px,transparent 1px),linear-gradient(90deg,#78b7ff20 1px,transparent 1px); background-size:40px 40px; mask-image:linear-gradient(to bottom,#000,transparent 85%); }
+    .ambient-logo { position:fixed; z-index:0; right:3vw; bottom:3vh; width:min(38vw,430px); opacity:.09; filter:drop-shadow(0 0 24px #78b7ff55); mask-image:radial-gradient(ellipse,#000 48%,transparent 75%); animation:logo-drift 18s ease-in-out infinite; pointer-events:none; }
+    .ambient-logo img { display:block; width:100%; border-radius:50%; }
+    @keyframes logo-drift { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-13px) rotate(2deg); } }
+    .python-snake-scene { position:fixed; z-index:0; inset:0; overflow:hidden; pointer-events:none; background:#020a16; }
+    .python-snake-scene img { display:block; width:100%; height:100%; object-fit:cover; opacity:.72; transform:scale(1.08); filter:saturate(1.12) contrast(1.05); animation:snake-scene-motion 30s cubic-bezier(.45,0,.55,1) infinite alternate; will-change:transform; }
+    .python-snake-scene::after { position:absolute; z-index:1; inset:0; content:""; background:radial-gradient(ellipse at 52% 42%,transparent 25%,#02081736 100%),linear-gradient(180deg,#02081738,#04112722 48%,#02081765); pointer-events:none; }
+    .snake-motion-light { position:absolute; z-index:2; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+    .snake-motion-light path { fill:none; stroke:url(#snake-light-gradient); stroke-width:7; stroke-linecap:round; stroke-dasharray:2 26 19 26; animation:snake-light-flow 18s linear infinite; filter:url(#snake-light-glow); }
+    .snake-motion-light .lower-light { opacity:.78; animation-duration:23s; animation-direction:reverse; }
+    @keyframes snake-scene-motion { 0% { transform:scale(1.1) translate3d(-.8%,.2%,0); } 50% { transform:scale(1.1) translate3d(.3%,-.3%,0); } 100% { transform:scale(1.1) translate3d(.8%,.2%,0); } }
+    @keyframes snake-light-flow { to { stroke-dashoffset:-73; } }
+    header { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:auto; padding:16px 24px; border-bottom:1px solid var(--line); }
+    .brand { display:inline-flex; align-items:center; gap:10px; color:var(--gold); font:700 28px Georgia,serif; text-decoration:none; }
+    .brand-logo { width:46px; height:46px; object-fit:cover; border:1px solid #f2b13480; border-radius:50%; box-shadow:0 0 18px #f2b13420; animation:brand-shimmer 7s ease-in-out infinite; }
+    .brand-copy { display:flex; flex-direction:column; gap:3px; line-height:1.05; }
+    .brand-caption { display:block; margin:0; padding-left:1px; color:#92a5c1; font:8px/1.25 var(--mono); letter-spacing:.12em; white-space:nowrap; }
+    @keyframes brand-shimmer { 0%,100% { box-shadow:0 0 14px #f2b1341a; } 50% { box-shadow:0 0 22px #78b7ff45; } }
+    .account-trigger { display:flex; align-items:center; gap:10px; padding:5px 10px 5px 6px; border:1px solid var(--line); border-radius:999px; background:#101f32; color:var(--text); text-decoration:none; transition:border-color .2s,background .2s; }
+    .account-trigger:hover { border-color:#f2b13490; background:#142640; }
+    .header-actions { display:flex; align-items:center; gap:10px; }
+    .feedback-link { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:0 14px; border:1px solid #314257; border-radius:999px; background:#101f32; color:#dce8f5; font-size:13px; font-weight:700; text-decoration:none; transition:border-color .2s,background .2s,transform .2s; }
+    .feedback-link:hover { border-color:#f2b13490; background:#142640; transform:translateY(-1px); }
+    .logout-form { margin:0; }
+    .logout-button { min-height:42px; padding:0 14px; border:1px solid #80505b; border-radius:999px; background:#211823; color:#ffd7dc; box-shadow:none; font-size:13px; }
+    .logout-button:hover { border-color:#d47a88; background:#35202a; box-shadow:0 6px 18px #b84b5b20; }
+    .account-avatar { width:36px; height:36px; display:grid; place-items:center; overflow:hidden; border-radius:50%; background:#f2b134; color:#15120a; font-weight:800; }
+    .account-avatar img { width:100%; height:100%; object-fit:cover; }
+    .wrap { position:relative; z-index:1; max-width:1440px; padding:32px 24px 64px; margin:auto; animation:page-enter .55s ease-out both; }
+    @keyframes page-enter { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    h1,h2,h3,p { margin-top:0; } h1 { font:700 clamp(34px,5vw,50px) Georgia,serif; margin-bottom:8px; }
+    h2 { margin-bottom:12px; } .muted { color:var(--muted); }
+    .people-search { margin:22px 0 0; padding:18px 20px; }
+    .people-search-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:12px; }
+    .people-search-head h2 { margin:2px 0 3px; font-size:19px; }
+    .people-search-head > div > p:last-child { margin:0; color:var(--muted); font-size:12px; }
+    .people-search-field { position:relative; }
+    .people-search-field svg { position:absolute; left:14px; top:50%; width:17px; height:17px; color:#9fb4ca; transform:translateY(-50%); pointer-events:none; }
+    .people-search-field input { display:block; width:100%; min-height:45px; padding:0 14px 0 42px; border:1px solid #344b65; border-radius:12px; outline:0; background:#081524eF; color:var(--text); font:14px system-ui,sans-serif; transition:border-color .18s,box-shadow .18s,background .18s; }
+    .people-search-field input::placeholder { color:#8799af; }
+    .people-search-field input:focus { border-color:#78b7ff; background:#0a192a; box-shadow:0 0 0 3px #78b7ff20; }
+    .people-search-status { min-height:18px; margin:9px 1px 0; color:#9eafc3; font-size:12px; }
+    .people-search-results { display:grid; gap:8px; margin-top:10px; }
+    .people-search-results[hidden] { display:none; }
+    .people-result { display:flex; align-items:center; gap:11px; min-width:0; padding:10px 12px; border:1px solid #293d55; border-radius:12px; background:#091625c9; animation:card-in .2s ease-out both; }
+    .people-result-avatar { display:grid; width:39px; height:39px; flex:0 0 39px; place-items:center; overflow:hidden; border:1px solid #78b7ff66; border-radius:50%; background:#17304b; color:#d9ebff; font-weight:800; }
+    .people-result-avatar img { width:100%; height:100%; object-fit:cover; }
+    .people-result-copy { display:grid; min-width:0; flex:1; line-height:1.35; }
+    .people-result-copy strong,.people-result-copy small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .people-result-copy strong { font-size:13px; }
+    .people-result-copy small { color:var(--muted); font-size:11px; }
+    .people-result-actions { display:flex; align-items:center; gap:7px; flex:none; }
+    .people-result-actions button,.people-result-actions a { display:inline-flex; min-height:33px; align-items:center; justify-content:center; padding:0 11px; border:1px solid #526b86; border-radius:9px; background:#12253a; color:#e5f0ff; font:700 11px system-ui,sans-serif; text-decoration:none; cursor:pointer; }
+    .people-result-actions .follow-toggle[data-following="false"] { border-color:#d9ae54; background:#f2b134; color:#17130a; }
+    .people-result-actions button:disabled { opacity:.55; cursor:wait; }
+    .eyebrow { color:var(--gold); text-transform:uppercase; letter-spacing:.12em; font:700 11px/1.5 var(--mono); }
+    .layout { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(290px,.8fr); gap:22px; margin-top:26px; align-items:start; }
+    .workspace { min-width:0; }
+    .progress-panel { position:sticky; top:16px; }
+    .progress-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:18px 0; }
+    .stat { padding:14px; border:1px solid var(--line); border-radius:12px; background:#0b1828; transition:border-color .2s,transform .2s; }
+    .stat:hover { border-color:#f2b13470; transform:translateY(-2px); }
+    .stat strong { display:block; color:var(--gold); font:700 24px/1.2 var(--mono); }
+    .stat span { color:var(--muted); font-size:12px; }
+    .review-box { margin:18px 0; padding:14px; border:1px solid #273b53; border-radius:12px; background:#0b1828; }
+    .review-box h3 { margin:0 0 8px; font:700 14px system-ui,sans-serif; }
+    #review-result { font-weight:800; }
+    #review-result[data-state="correct"] { color:var(--green); }
+    #review-result[data-state="incorrect"], #review-result[data-state="partial"] { color:#ffbd69; }
+    #review-feedback { margin:7px 0 0; color:var(--muted); white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; }
+    #corrected-code { display:none; max-height:260px; overflow:auto; margin:12px 0 0; padding:12px; border:1px solid #273b53; border-radius:9px; background:#070d15; color:#d7e3f4; white-space:pre; font:13px/1.55 var(--mono); }
+    #load-correction { display:none; margin-top:10px; }
+    .journey { display:grid; gap:8px; margin-top:18px; }
+    .journey-item { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 11px; border:1px solid #203349; border-radius:9px; color:#dce8f5; font-size:13px; transition:border-color .2s,background .2s; }
+    .journey-item:hover { border-color:#78b7ff70; }
+    .journey-item.active { border-color:#9a7023; background:#2b2519; }
+    .journey-item[data-topic-status="mastered"] { border-color:#367452; background:#10251f; }
+    .journey-item[data-topic-status="in_progress"] { border-color:#4e7198; background:#12243a; }
+    .journey-item small { color:var(--muted); white-space:nowrap; }
+    .stack { display:grid; gap:20px; }
+    .card { padding:22px; background:linear-gradient(145deg,rgba(20,39,61,.96),rgba(12,27,44,.96)); border:1px solid var(--line); border-radius:18px; box-shadow:0 18px 45px #0003; transition:border-color .22s,box-shadow .22s,transform .22s; animation:card-in .45s ease-out both; }
+    .card:hover { border-color:#405472; box-shadow:0 22px 48px #0004; transform:translateY(-2px); }
+    .teacher-heading { display:flex; align-items:center; gap:14px; margin-bottom:8px; }
+    .teacher-avatar { width:56px; height:56px; flex:0 0 56px; overflow:hidden; }
+    .teacher-avatar img { display:block; width:100%; height:100%; object-fit:cover; }
+    .teacher-heading .eyebrow { margin:0 0 2px; }
+    .teacher-heading h2 { margin:0; }
+    .stack > .card:nth-child(2) { animation-delay:.07s; }
+    .progress-panel { animation:card-in .55s .12s ease-out both; }
+    @keyframes card-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+    .actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; }
+    .lesson-controls { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid #273b53; }
+    .lesson-controls button { padding:9px 12px; font-size:12px; }
+    .level-picker { display:grid; gap:10px; max-width:560px; margin:16px 0 0; padding:0; border:0; }
+    .level-picker legend { margin-bottom:2px; color:#dce8f5; font-size:14px; font-weight:700; }
+    .level-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .level-option { position:relative; display:block; min-width:0; cursor:pointer; animation:level-card-in .42s ease-out both; }
+    .level-option:nth-child(2) { animation-delay:.04s; }.level-option:nth-child(3) { animation-delay:.08s; }.level-option:nth-child(4) { animation-delay:.12s; }.level-option:nth-child(5) { grid-column:1/-1; animation-delay:.16s; }
+    @keyframes level-card-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+    .level-option input { position:absolute; width:1px; height:1px; opacity:0; }
+    .level-box { position:relative; display:flex; min-height:69px; align-items:center; gap:11px; overflow:hidden; padding:11px 13px; border:1px solid #2b4058; border-radius:13px; background:linear-gradient(145deg,#101f32,#0b1726); box-shadow:inset 0 1px #ffffff08,0 5px 14px #0002; transition:transform .2s,border-color .22s,background .22s,box-shadow .22s; }
+    .level-box::after { position:absolute; inset:0 auto 0 0; width:3px; content:""; background:linear-gradient(180deg,#ffd777,#f2b134); opacity:0; transform:scaleY(.35); transition:opacity .2s,transform .24s; }
+    .level-option:hover .level-box { transform:translateY(-2px); border-color:#f2b13480; background:linear-gradient(145deg,#172b43,#0e1d31); box-shadow:inset 0 1px #ffffff10,0 10px 20px #0003; }
+    .level-option input:checked + .level-box { border-color:#f2b134c9; background:linear-gradient(145deg,#302818,#162239); box-shadow:0 0 0 2px #f2b13420,inset 0 1px #ffffff12,0 10px 22px #0003; }
+    .level-option input:checked + .level-box::after { opacity:1; transform:scaleY(1); }
+    .level-option input:focus-visible + .level-box { outline:3px solid #78b7ff; outline-offset:3px; }
+    .level-number { display:grid; width:34px; height:34px; flex:0 0 34px; place-items:center; border:1px solid #344a64; border-radius:10px; background:#091524; color:#91a7c2; font:700 11px var(--mono); transition:color .2s,border-color .2s,background .2s,transform .2s; }
+    .level-option input:checked + .level-box .level-number { border-color:#f2b1348c; background:#f2b13418; color:#ffd777; transform:scale(1.04); }
+    .level-copy { display:grid; gap:2px; min-width:0; }
+    .level-copy strong { color:#eaf0fa; font-size:13px; line-height:1.35; }
+    .level-copy small { color:#92a3b8; font-size:11px; line-height:1.35; }
+    #learning-level { display:none; }
+    button { border:0; border-radius:9px; padding:11px 16px; cursor:pointer; background:linear-gradient(135deg,#ffd777,#f2b134); color:#15120a; font:700 14px system-ui,sans-serif; box-shadow:0 5px 15px #f2b13420; transition:transform .18s,box-shadow .18s,filter .18s; }
+    button:hover { transform:translateY(-1px); box-shadow:0 8px 20px #f2b13435; filter:brightness(1.03); }
+    button:active { transform:translateY(0); }
+    button:disabled { opacity:.55; cursor:wait; transform:none; }
+    .secondary { background:#152a40; color:#dce8f5; border:1px solid var(--line); box-shadow:none; }
+    .secondary:hover { border-color:#78b7ff90; box-shadow:0 6px 18px #78b7ff12; }
+    .editor { overflow:hidden; border:1px solid #314257; border-radius:12px; background:#0b111a; box-shadow:0 12px 30px #0003; transition:border-color .2s,box-shadow .2s; }
+    .editor-bar { height:38px; display:flex; align-items:center; justify-content:space-between; padding:0 13px; background:#151d28; border-bottom:1px solid #273548; color:#b9c7d8; font:12px var(--mono); }
+    .editor-title { display:flex; align-items:center; gap:8px; }
+    .python-dot { width:9px; height:9px; border-radius:50%; background:#f2c84b; box-shadow:4px 0 #4888c7; margin-right:4px; }
+    .editor-body { display:flex; max-height:430px; min-height:300px; overflow:hidden; }
+    .line-numbers { flex:none; width:48px; padding:14px 10px 14px 0; overflow:hidden; background:#0b111a; color:#65758a; text-align:right; user-select:none; font:14px/1.65 var(--mono); }
+    .line-numbers span { display:block; height:1.65em; }
+    .code-editor { display:block; flex:1; min-width:0; min-height:300px; max-height:430px; resize:vertical; padding:14px 14px 14px 10px; border:0; outline:0; overflow:auto; background:transparent; color:#d7e3f4; caret-color:#fff; tab-size:4; white-space:pre; overflow-wrap:normal; font:14px/1.65 var(--mono); }
+    .editor:focus-within { border-color:var(--cyan); box-shadow:0 0 0 1px #36d9ff40,0 12px 30px #0003; }
+    .editor-help { padding:8px 13px; border-top:1px solid #202c3a; color:#93a3b8; font:11px var(--mono); }
+    .run-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:14px; }
+    .run-toolbar button { display:inline-flex; align-items:center; gap:8px; }
+    .run-note { color:#93a3b8; font-size:12px; }
+    .terminal { overflow:hidden; margin-top:14px; border:1px solid #273548; border-radius:11px; background:#070d15; }
+    .terminal-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 12px; border-bottom:1px solid #202c3a; background:#111a26; color:#c6d3e3; font:12px var(--mono); }
+    .terminal-bar button { padding:5px 9px; font-size:11px; }
+    .terminal-input { display:block; width:100%; min-height:58px; resize:vertical; padding:10px 12px; border:0; border-bottom:1px solid #202c3a; outline:0; background:#0b111a; color:#d7e3f4; font:12px/1.55 var(--mono); }
+    .terminal-input::placeholder { color:#718096; }
+    .terminal-output { min-height:72px; max-height:230px; overflow:auto; margin:0; padding:12px; color:#b9efc9; white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.6 var(--mono); }
+    .terminal-output[data-state="error"] { color:#ff9b9b; }
+    .terminal-output[data-state="pending"] { color:#ffd777; }
+    .topic { display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid #203349; }
+    .topic:last-child { border-bottom:0; }
+    .topic small { color:var(--muted); }
+    #connection-status { min-height:24px; font-size:14px; }
+    @media (max-width:900px) { .layout { grid-template-columns:1fr; } .progress-panel { position:relative; top:auto; } .wrap { padding:24px 16px 46px; } header { padding:14px 16px; } .python-snake-scene img { opacity:.53; } .snake-motion-light { opacity:.65; } }
+    @media (prefers-reduced-motion:reduce) { .snake-motion-light { display:none; } }
+    @media (max-width:520px) { header { gap:8px; align-items:center; } .brand { font-size:23px; } .brand-logo { width:40px; height:40px; } .header-actions { max-width:calc(100% - 130px); flex-wrap:wrap; justify-content:flex-end; gap:6px; } .feedback-link,.logout-button { min-height:36px; padding:0 9px; font-size:11px; white-space:nowrap; } .account-trigger { gap:6px; padding-right:7px; } .account-trigger > span:nth-child(2) { max-width:65px; overflow:hidden; text-overflow:ellipsis; } .wrap { padding-top:24px; } .level-options { grid-template-columns:1fr; } .level-option:nth-child(5) { grid-column:auto; } .editor-body { min-height:270px; } .code-editor { min-height:270px; } .actions button { flex:1; } .people-search { padding:16px 14px; } .people-search-head { display:block; } .people-result { align-items:flex-start; flex-wrap:wrap; } .people-result-actions { width:100%; padding-left:50px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+  </style>
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/python-editor.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+  <script src="/static/js/python-editor.js" defer></script>
+  <script src="/static/js/safety-tools.js" defer></script>
+</head>
+<body data-safety-csrf="{{ safety_csrf }}">
+  <div class="python-snake-scene" aria-hidden="true">
+    <img src="/static/img/python-snake-background.png" alt="">
+    <svg class="snake-motion-light" viewBox="0 0 1672 940" preserveAspectRatio="xMidYMid slice" focusable="false">
+      <defs>
+        <linearGradient id="snake-light-gradient" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#138dff" stop-opacity="0"/><stop offset=".48" stop-color="#39caff"/><stop offset=".78" stop-color="#ffd64f"/><stop offset="1" stop-color="#168fff" stop-opacity="0"/></linearGradient>
+        <filter id="snake-light-glow" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4" result="soft"/><feMerge><feMergeNode in="soft"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M-50 410 C100 330 220 335 350 405 S535 460 650 405 S790 225 910 235 S1050 325 1160 315 S1290 325 1370 385 S1460 450 1530 455"/>
+      <path class="lower-light" d="M-60 540 C100 465 205 475 330 530 S500 700 625 750 S830 755 950 700 S1125 640 1240 680 S1380 790 1510 760 S1630 700 1730 660"/>
+    </svg>
+  </div>
+  <header><a class="brand" href="/dashboard" aria-label="Grapsy dashboard"><img class="brand-logo" src="/static/img/logo-badge.png" alt=""><span class="brand-copy"><span>Grapsy</span><small class="brand-caption">LEARN · BUILD · GROW</small></span></a>
+    <div class="header-actions"><a class="feedback-link" href="/messages">Messages</a><a class="feedback-link" href="/projects">Projects</a><a class="feedback-link" href="/feedback">Send feedback</a><a class="account-trigger" href="/profile" aria-label="Open your profile">
+      <span class="account-avatar">{% if profile_picture_url %}<img src="{{ profile_picture_url }}" alt="">{% else %}{{ username[:1] | upper }}{% endif %}</span><span>{{ username }}</span>
+    </a><form class="logout-form" method="post" action="/logout"><button class="logout-button" type="submit">Log out</button></form></div>
+  </header>
+  <main class="wrap">
+    <p class="eyebrow">PythonGT · Your AI Python teacher</p>
+    <h1>Learn Python by writing code.</h1>
+    <p class="muted">Grapsy AI creates each lesson and coding challenge, reviews your code, explains mistakes, and guides you forward from beginner to advanced topics.</p>
+    <section class="card people-search" id="people-search" data-csrf-token="{{ project_csrf }}" aria-label="Search Grapsy users">
+      <div class="people-search-head"><div><p class="eyebrow">Grapsy community</p><h2>Find people</h2><p>Search learners by name or username. Follow them to connect.</p></div></div>
+      <label class="people-search-field"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg><input id="people-search-input" type="search" placeholder="Search people…" autocomplete="off" aria-label="Search Grapsy users"></label>
+      <p class="people-search-status" id="people-search-status" role="status" aria-live="polite">Type at least 2 characters to search Grapsy.</p>
+      <div class="people-search-results" id="people-search-results" aria-live="polite" hidden></div>
+    </section>
+    <div class="layout">
+      <div class="workspace stack">
+        <section class="card">
+          <div class="teacher-heading">
+            <div class="teacher-avatar"><img src="/static/img/logo-badge.png" alt="PythonGT logo"></div>
+            <div><p class="eyebrow">PythonGT</p><h2>Your live lesson</h2></div>
+          </div>
+          <p>Start a lesson to have Grapsy AI generate your first coding challenge in the teacher chat. Submit code here and the same AI will review it, show a correction when needed, and give you the next step.</p>
+          <fieldset class="level-picker">
+            <legend>Choose your Python level</legend>
+            <div class="level-options" role="radiogroup" aria-label="Python learning level">
+              <label class="level-option"><input type="radio" name="learning-level-choice" value="Beginner"><span class="level-box"><span class="level-number">01</span><span class="level-copy"><strong>Beginner</strong><small>I am new to Python</small></span></span></label>
+              <label class="level-option"><input type="radio" name="learning-level-choice" value="Basic"><span class="level-box"><span class="level-number">02</span><span class="level-copy"><strong>Basic</strong><small>I know a little Python</small></span></span></label>
+              <label class="level-option"><input type="radio" name="learning-level-choice" value="Intermediate"><span class="level-box"><span class="level-number">03</span><span class="level-copy"><strong>Intermediate</strong><small>I can build small programs</small></span></span></label>
+              <label class="level-option"><input type="radio" name="learning-level-choice" value="Advanced"><span class="level-box"><span class="level-number">04</span><span class="level-copy"><strong>Advanced</strong><small>I know Python's core features</small></span></span></label>
+              <label class="level-option"><input type="radio" name="learning-level-choice" value="Professional"><span class="level-box"><span class="level-number">05</span><span class="level-copy"><strong>Professional</strong><small>I want practical, production-level skills</small></span></span></label>
+            </div>
+            <select id="learning-level" aria-hidden="true" tabindex="-1">
+              <option value="" selected disabled>Select the level that fits you</option>
+              <option value="Beginner">Beginner — I am new to Python</option>
+              <option value="Basic">Basic — I know a little Python</option>
+              <option value="Intermediate">Intermediate — I can build small programs</option>
+              <option value="Advanced">Advanced — I know core Python well</option>
+              <option value="Professional">Professional — I want practical, production-level skills</option>
+            </select>
+          </fieldset>
+          <div class="actions"><button type="button" id="start-course">Start with Grapsy AI</button><span id="connection-status" class="muted" role="status" aria-live="polite">Start a lesson to begin.</span></div>
+          <div class="lesson-controls" aria-label="Lesson controls">
+            <button type="button" class="secondary" id="pause-lesson" disabled>Pause lesson</button>
+            <button type="button" class="secondary" id="resume-lesson" disabled hidden>Resume lesson</button>
+            <button type="button" class="secondary" id="repeat-lesson" disabled>Repeat explanation</button>
+            <button type="button" class="secondary" id="another-example" disabled>Another example</button>
+          </div>
+        </section>
+        <section class="card">
+          <p class="eyebrow">Your answer</p>
+          <h2>Python editor</h2>
+          <p class="muted">Read the challenge in PythonGT chat, write your solution, then submit it for AI feedback.</p>
+          <form id="code-form">
+            <div class="editor" aria-label="Python code editor">
+              <div class="editor-bar"><span class="editor-title"><span class="python-dot"></span>main.py</span><span>Python</span></div>
+              <div class="editor-body ide-main" data-python-editor data-smart-keys="false"><div id="line-numbers" class="line-numbers ide-gutter" aria-hidden="true"><pre>1</pre></div><div class="ide-stage"><pre class="ide-highlight" aria-hidden="true"><code></code></pre><textarea id="code-editor" class="code-editor python-editor-input" maxlength="12000" required spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Write your Python code" placeholder="# Write your solution here"></textarea></div></div>
+              <div class="ide-status"><span class="ide-position">Ln 1, Col 1</span><span>Spaces: 4</span><span>Python 3 · Tab: indent</span></div>
+              <div class="editor-help">Enter: auto-indent · Tab: 4 spaces · Shift+Tab: outdent</div>
+            </div>
+            <div class="run-toolbar"><button type="button" id="run-code"><span aria-hidden="true">▶</span> Run code</button><span class="run-note">Runs in your browser. Check for errors and output, then submit so Grapsy can check the answer against the challenge.</span></div>
+            <section class="terminal" aria-label="Python terminal">
+              <div class="terminal-bar"><span>Terminal · Python output</span><button type="button" class="secondary" id="clear-terminal">Clear</button></div>
+              <textarea id="terminal-input" class="terminal-input" spellcheck="false" aria-label="Program input" placeholder="Program input for input() calls (one value per line)"></textarea>
+              <pre id="terminal-output" class="terminal-output" data-state="idle" role="status" aria-live="polite">Ready. Press Run code to execute your program.</pre>
+            </section>
+            <div class="actions"><button type="submit" id="submit-code">Submit code to Grapsy AI</button><button type="button" class="secondary" id="get-hint">Get a hint</button><button type="button" class="secondary" id="clear-code">Clear editor</button></div>
+          </form>
+        </section>
+      </div>
+      <aside class="card progress-panel" aria-label="Your learning progress">
+        <p class="eyebrow">Your progress</p>
+        <h2>Learning report</h2>
+        <p class="muted">Track your chosen starting level and coding practice here. Grapsy AI gives mastery feedback in the chat.</p>
+        <div class="progress-stats">
+          <div class="stat"><strong id="report-level">—</strong><span>Starting level</span></div>
+          <div class="stat"><strong id="report-submissions">0</strong><span>Code submissions</span></div>
+          <div class="stat"><strong id="report-topics">0 / {{ course_path.topics | length }}</strong><span>Topics mastered</span></div>
+        </div>
+        <section class="review-box" aria-live="polite" aria-label="Latest code review">
+          <h3>Latest code review</h3>
+          <div id="review-result" data-state="none">No code reviewed yet</div>
+          <p id="review-feedback">Submit your solution to get AI feedback here.</p>
+          <pre id="corrected-code"></pre>
+          <button type="button" class="secondary" id="load-correction">Load corrected code into editor</button>
+        </section>
+        <p class="eyebrow">Python learning path</p>
+        <p class="muted" style="font-size:12px;margin:4px 0 10px">Two consecutive correct reviews mark a topic mastered.</p>
+        <div id="report-journey" class="journey">
+          {% for topic in course_path.topics %}
+          <div class="journey-item" data-level="{{ topic.level }}" data-topic-id="{{ topic.id }}"><span>{{ topic.name }}</span><small>{{ topic.level }}</small></div>
+          {% endfor %}
+        </div>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const coursePath = {{ course_path.topics | tojson }};
+    const learnerName = {{ username | tojson }};
+    const learningRecordCsrf = {{ learning_record_csrf | tojson }};
+    const editor = document.getElementById("code-editor");
+    const terminalOutput = document.getElementById("terminal-output");
+    let pythonWorker = null;
+    let pythonWorkerReady = false;
+    let pythonRunPending = false;
+    let pythonExecutionStarted = false;
+    let pythonRunTimeout = null;
+    const levelPicker = document.getElementById("learning-level");
+    const levelChoices = [...document.querySelectorAll('input[name="learning-level-choice"]')];
+    const status = document.getElementById("connection-status");
+    const progressKey = `grapsy-progress:${learnerName}`;
+    let progress = {level: "", submissions: 0};
+    try { progress = {...progress, ...JSON.parse(localStorage.getItem(progressKey) || "{}")} } catch (_) {}
+    let botpressReady = false;
+    let listenersAttached = false;
+    let pendingMessage = null;
+    let courseStarted = false;
+    let lessonPaused = false;
+    let lessonStarting = false;
+    let awaitingCodeReview = false;
+    let reviewTimeout = null;
+    let currentQuestion = "";
+    let hintUsed = false;
+    let hintReplyExpected = false;
+    let pendingSubmission = null;
+    let currentTopicId = "";
+
+    async function updateTeacherContext(level = progress.level || "") {
+      if (!window.botpress || typeof window.botpress.updateUser !== "function") return;
+      try {
+        await window.botpress.updateUser({
+          name: learnerName,
+          data: {
+            subject: "Python",
+            teacher: "PythonGT",
+            appName: "Grapsy",
+            developedBy: "Prakash Shah",
+            developedIn: "Nepal",
+            developedYear: 2026,
+            learningLevel: level,
+            coursePath
+          }
+        });
+      } catch (_) {}
+    }
+
+    function renderProgress() {
+      document.getElementById("report-level").textContent = progress.level || "—";
+      document.getElementById("report-submissions").textContent = String(progress.submissions || 0);
+      document.querySelectorAll(".journey-item").forEach(item => {
+        const active = Boolean(progress.level) && item.dataset.level === progress.level;
+        if (!item.dataset.topicStatus) item.classList.toggle("active", active);
+        const badge = item.querySelector("small");
+        if (!item.dataset.topicStatus) badge.textContent = active ? `${item.dataset.level} · starting here` : item.dataset.level;
+      });
+    }
+    function renderTopicProgress(topics) {
+      const labels = {mastered:"Mastered", in_progress:"In progress", next:"Up next", upcoming:"Upcoming", foundation:"Foundation"};
+      const byId = new Map(topics.map(topic => [topic.id, topic]));
+      document.querySelectorAll(".journey-item[data-topic-id]").forEach(item => {
+        const topic = byId.get(item.dataset.topicId);
+        if (!topic) return;
+        item.dataset.topicStatus = topic.status;
+        item.classList.toggle("active", topic.status === "next" || topic.status === "in_progress");
+        item.querySelector("small").textContent = labels[topic.status] || topic.status;
+      });
+      document.getElementById("report-topics").textContent = `${topics.filter(topic => topic.status === "mastered").length} / ${topics.length}`;
+    }
+    async function loadTopicProgress() {
+      try {
+        const response = await fetch("/api/topic-progress");
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data.ok) renderTopicProgress(data.topics);
+      } catch (_) {}
+    }
+    function syncLevelChoices() {
+      levelChoices.forEach(choice => { choice.checked = choice.value === levelPicker.value; });
+    }
+    function saveProgress() {
+      localStorage.setItem(progressKey, JSON.stringify(progress));
+      renderProgress();
+      const data = new FormData();
+      data.append("level", progress.level || "");
+      data.append("submissions", String(progress.submissions || 0));
+      data.append("last_result", progress.lastResult || "");
+      fetch("/api/profile/progress", {method:"POST", body:data}).catch(() => {});
+    }
+    async function restoreProgress() {
+      try {
+        const response = await fetch("/api/profile/progress");
+        if (!response.ok) return;
+        const saved = await response.json();
+        const savedSubmissions = Number(saved.submissions || 0);
+        progress = {
+          level: progress.level || saved.level || "",
+          submissions: Math.max(Number(progress.submissions || 0), savedSubmissions),
+          lastResult: progress.lastResult || saved.last_result || ""
+        };
+        localStorage.setItem(progressKey, JSON.stringify(progress));
+        levelPicker.value = progress.level;
+        syncLevelChoices();
+        renderProgress();
+        if (progress.submissions > savedSubmissions || (progress.level && !saved.level) || (progress.lastResult && !saved.last_result)) saveProgress();
+      } catch (_) {}
+    }
+    function setReview(state, label, feedback) {
+      const result = document.getElementById("review-result");
+      result.dataset.state = state;
+      result.textContent = label;
+      document.getElementById("review-feedback").textContent = feedback;
+    }
+    function extractEventText(value, output = [], seen = new Set()) {
+      if (typeof value === "string") { output.push(value); return output; }
+      if (!value || typeof value !== "object" || seen.has(value)) return output;
+      seen.add(value);
+      if (Array.isArray(value)) value.forEach(item => extractEventText(item, output, seen));
+      else Object.values(value).forEach(item => extractEventText(item, output, seen));
+      return output;
+    }
+    function teacherMessageText(event) {
+      const direction = event?.direction || event?.message?.direction;
+      if (direction === "incoming") return "";
+      const direct = [event?.payload?.text, event?.message?.payload?.text, event?.message?.text, event?.text]
+        .find(value => typeof value === "string" && value.trim());
+      if (direct) return direct.trim();
+      return extractEventText(event)
+        .filter(value => value.trim().length > 20 && !/^(incoming|outgoing|text|message)$/i.test(value.trim()))
+        .sort((a, b) => b.length - a.length)[0]?.trim() || "";
+    }
+    function extractChallenge(text) {
+      const match = text.match(/(?:^|\n)\s*(?:#{1,4}\s*)?(?:Python\s+)?Challenge\s*:\s*([\s\S]*?)(?=\n\s*(?:#{1,4}\s*)?(?:Hint|Submit|Your answer|Review result)\b|$)/i);
+      return (match ? `Challenge: ${match[1].trim()}` : text.trim()).slice(0, 10000);
+    }
+    function inferTopicId(text) {
+      const normalized = text.toLowerCase().replace(/[_-]+/g, " ");
+      const heading = normalized.match(/(?:^|\n)\s*(?:#{1,4}\s*)?(?:current\s+)?topic\s*:\s*([^\n]+)/i)?.[1]?.trim();
+      if (heading) {
+        const exact = coursePath.find(topic => heading.includes(topic.name.toLowerCase()) || heading.includes(topic.id.replace(/[_-]+/g, " ")));
+        if (exact) return exact.id;
+      }
+      return coursePath.find(topic => normalized.includes(topic.name.toLowerCase()) || normalized.includes(topic.id.replace(/[_-]+/g, " ")))?.id || "";
+    }
+    async function saveLearningRecord(record) {
+      const body = new FormData();
+      body.append("question", record.question || "Python challenge (teacher prompt was not captured)");
+      body.append("submitted_answer", record.answer);
+      body.append("accuracy_score", String(record.accuracy));
+      body.append("hint_used", String(Boolean(record.hintUsed)));
+      body.append("topic_id", record.topicId || "");
+      body.append("csrf_token", learningRecordCsrf);
+      const response = await fetch("/api/learning-records", {method:"POST", body});
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || "Could not save this learning record.");
+    }
+    function handleTeacherMessage(event) {
+      const direction = event?.direction || event?.message?.direction;
+      if (direction === "incoming") return;
+      const text = teacherMessageText(event);
+      if (!text) return;
+      currentTopicId = inferTopicId(text) || currentTopicId;
+      if (/^(hi grapsy!|here is my python solution for the current challenge:|can i have a small hint)/i.test(text)) return;
+      const resultMatch = text.match(/(?:GRAPSY_)?REVIEW\s*RESULT\s*:\s*(CORRECT|INCORRECT|PARTIAL)/i);
+      if (!resultMatch) {
+        if (hintReplyExpected) { hintReplyExpected = false; return; }
+        if (courseStarted || lessonStarting) { currentQuestion = extractChallenge(text); hintUsed = false; }
+        return;
+      }
+      if (!awaitingCodeReview) return;
+      const result = resultMatch[1].toUpperCase();
+      const state = result.toLowerCase();
+      const label = result === "CORRECT" ? "Correct solution" : result === "PARTIAL" ? "Partially correct" : "Needs correction";
+      const codeMatch = text.match(/(?:Corrected solution|Correct code)\s*:?\s*```(?:python)?\s*([\s\S]*?)```/i);
+      const codeElement = document.getElementById("corrected-code");
+      const loadButton = document.getElementById("load-correction");
+      const code = codeMatch?.[1]?.trim() || "";
+      let feedback = text
+        .replace(/(?:GRAPSY_)?REVIEW\s*RESULT\s*:\s*(CORRECT|INCORRECT|PARTIAL)/i, "")
+        .replace(/(?:Corrected solution|Correct code)\s*:?\s*```(?:python)?\s*[\s\S]*?```/i, "")
+        .trim();
+      const nextChallengePosition = feedback.search(/(?:^|\n)\s*(?:#{1,4}\s*)?Challenge\s*:/i);
+      if (nextChallengePosition >= 0) feedback = feedback.slice(0, nextChallengePosition).trim();
+      const attempt = pendingSubmission || {question: currentQuestion, answer: "", hintUsed, level: progress.level};
+      pendingSubmission = null;
+      setReview(state, label, feedback || (result === "CORRECT" ? "Your solution passed the teacher's review." : "Read Grapsy's feedback in the teacher chat for the explanation."));
+      codeElement.textContent = code;
+      codeElement.style.display = code ? "block" : "none";
+      loadButton.style.display = code ? "inline-block" : "none";
+      awaitingCodeReview = false;
+      clearTimeout(reviewTimeout);
+      progress.lastResult = result;
+      saveProgress();
+      const nextChallenge = text.match(/(?:^|\n)\s*(?:#{1,4}\s*)?(?:Python\s+)?Challenge\s*:\s*([\s\S]*?)(?=\n\s*(?:#{1,4}\s*)?(?:Hint|Submit|Your answer|Review result)\b|$)/i);
+      if (nextChallenge) { currentQuestion = `Challenge: ${nextChallenge[1].trim()}`.slice(0, 10000); hintUsed = false; }
+      const accuracy = result === "CORRECT" ? 100 : result === "PARTIAL" ? 50 : 0;
+      saveLearningRecord({question: attempt.question, answer: attempt.answer, accuracy, hintUsed: attempt.hintUsed, topicId: attempt.topicId})
+        .then(() => { status.textContent = "Review saved to your profile learning history."; loadTopicProgress(); })
+        .catch(error => { status.textContent = `Review received, but saving it failed: ${error.message}`; });
+    }
+    renderProgress();
+    levelPicker.value = progress.level || "";
+    syncLevelChoices();
+    restoreProgress();
+    loadTopicProgress();
+    levelPicker.addEventListener("change", () => { progress.level = levelPicker.value; saveProgress(); });
+    levelChoices.forEach(choice => choice.addEventListener("change", () => {
+      if (!choice.checked) return;
+      levelPicker.value = choice.value;
+      levelPicker.dispatchEvent(new Event("change", {bubbles:true}));
+    }));
+
+    function updateLineNumbers() {
+      const count = (editor.value.match(/\n/g) || []).length + 1;
+      document.querySelector("#line-numbers pre").textContent = Array.from({length: count}, (_, i) => i + 1).join("\n");
+    }
+    function insertAtCursor(text) {
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      editor.setRangeText(text, start, end, "select");
+      editor.setSelectionRange(start + text.length, start + text.length);
+      editor.dispatchEvent(new Event("input", {bubbles:true}));
+    }
+    function setTerminal(text, state = "idle") {
+      terminalOutput.textContent = text;
+      terminalOutput.dataset.state = state;
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+    function stopPythonAfterTimeout() {
+      if (!pythonRunPending) return;
+      pythonWorker?.terminate();
+      pythonWorker = null;
+      pythonWorkerReady = false;
+      pythonRunPending = false;
+      document.getElementById("run-code").disabled = false;
+      setTerminal(
+        pythonExecutionStarted
+          ? "Execution stopped after 10 seconds. Check for an infinite loop, then run it again."
+          : "The Python runtime took too long to load. Check your internet connection and try again.",
+        "error"
+      );
+      pythonExecutionStarted = false;
+    }
+    function getPythonWorker() {
+      if (pythonWorker) return pythonWorker;
+      pythonWorker = new Worker("/static/js/python-runner-worker.js");
+      pythonWorker.addEventListener("message", event => {
+        const data = event.data || {};
+        if (data.type === "ready") {
+          pythonWorkerReady = true;
+          if (!pythonRunPending) setTerminal("Python is ready. Press Run code to execute your program.");
+        } else if (data.type === "loading") {
+          if (!pythonRunPending) setTerminal("Loading the Python runtime for the first run…", "pending");
+        } else if (data.type === "running") {
+          pythonExecutionStarted = true;
+          clearTimeout(pythonRunTimeout);
+          pythonRunTimeout = setTimeout(() => stopPythonAfterTimeout(), 10000);
+        } else if (data.type === "stdout") {
+          if (terminalOutput.dataset.state === "pending") terminalOutput.textContent = "Output:\n";
+          terminalOutput.textContent += data.text;
+          terminalOutput.dataset.state = "output";
+          terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        } else if (data.type === "stderr" || data.type === "error") {
+          if (terminalOutput.dataset.state === "pending") terminalOutput.textContent = "Error:\n";
+          terminalOutput.textContent += data.text;
+          terminalOutput.dataset.state = "error";
+          terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        } else if (data.type === "done") {
+          clearTimeout(pythonRunTimeout);
+          pythonRunPending = false;
+          pythonExecutionStarted = false;
+          document.getElementById("run-code").disabled = false;
+          if (!terminalOutput.textContent.trim()) setTerminal("Program finished with no output.");
+          else if (terminalOutput.dataset.state === "pending") terminalOutput.dataset.state = "output";
+        }
+      });
+      pythonWorker.addEventListener("error", event => {
+        clearTimeout(pythonRunTimeout);
+        pythonRunPending = false;
+        document.getElementById("run-code").disabled = false;
+        setTerminal(`Could not start the Python runtime: ${event.message || "worker error"}`, "error");
+      });
+      pythonWorker.postMessage({type:"init"});
+      return pythonWorker;
+    }
+    document.getElementById("run-code").addEventListener("click", () => {
+      const code = editor.value;
+      if (!code.trim()) { setTerminal("Write some Python code before running it.", "error"); editor.focus(); return; }
+      if (pythonRunPending) return;
+      pythonRunPending = true;
+      document.getElementById("run-code").disabled = true;
+      pythonExecutionStarted = false;
+      setTerminal("Running your Python code…", "pending");
+      getPythonWorker().postMessage({type:"run", code, stdin:document.getElementById("terminal-input").value});
+      pythonRunTimeout = setTimeout(() => stopPythonAfterTimeout(), 90000);
+    });
+    document.getElementById("clear-terminal").addEventListener("click", () => setTerminal(pythonWorkerReady ? "Terminal cleared." : "Ready. Press Run code to execute your program."));
+    editor.addEventListener("input", updateLineNumbers);
+    editor.addEventListener("scroll", updateLineNumbers);
+    editor.addEventListener("keydown", (event) => {
+      const pairs = {"(":")", "[":"]", "{":"}", "'":"'", '"':'"'};
+      if (event.key === "Tab") {
+        event.preventDefault();
+        const start = editor.selectionStart, end = editor.selectionEnd;
+        const lineStart = editor.value.lastIndexOf("\n", start - 1) + 1;
+        if (event.shiftKey) {
+          const spaces = editor.value.slice(lineStart, start).match(/^ {1,4}/);
+          if (spaces) { editor.setRangeText("", lineStart, lineStart + spaces[0].length, "preserve"); editor.dispatchEvent(new Event("input", {bubbles:true})); }
+        } else if (start === end) insertAtCursor("    ");
+        else {
+          const selected = editor.value.slice(start, end).replace(/^/gm, "    ");
+          editor.value = editor.value.slice(0, start) + selected + editor.value.slice(end);
+          editor.setSelectionRange(start, start + selected.length);
+          updateLineNumbers();
+          editor.dispatchEvent(new Event("input", {bubbles:true}));
+        }
+        return;
+      }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const start = editor.selectionStart;
+        const lineStart = editor.value.lastIndexOf("\n", start - 1) + 1;
+        const prefix = editor.value.slice(lineStart, start);
+        const indent = (prefix.match(/^\s*/) || [""])[0];
+        insertAtCursor(`\n${indent}${prefix.trimEnd().endsWith(":") ? "    " : ""}`);
+        return;
+      }
+      if (event.key === "Backspace" && editor.selectionStart === editor.selectionEnd) {
+        const start = editor.selectionStart;
+        const lineStart = editor.value.lastIndexOf("\n", start - 1) + 1;
+        if (start > lineStart && /^ +$/.test(editor.value.slice(lineStart, start)) && editor.value.slice(start - 4, start) === "    ") {
+          event.preventDefault(); editor.setRangeText("", start - 4, start, "end"); editor.dispatchEvent(new Event("input", {bubbles:true})); return;
+        }
+      }
+      if (pairs[event.key] && editor.selectionStart === editor.selectionEnd) {
+        const start = editor.selectionStart;
+        event.preventDefault();
+        editor.setRangeText(event.key + pairs[event.key], start, start, "select");
+        editor.setSelectionRange(start + 1, start + 1);
+        editor.dispatchEvent(new Event("input", {bubbles:true}));
+      }
+    });
+
+    function attachBotpress() {
+      const apiReady = window.botpress
+        && typeof window.botpress.on === "function"
+        && typeof window.botpress.open === "function"
+        && typeof window.botpress.sendMessage === "function";
+      if (!apiReady) return false;
+      if (listenersAttached) return true;
+      listenersAttached = true;
+      window.botpress.on("webchat:initialized", () => {
+        if (typeof window.botpress.config === "function") {
+          window.botpress.config({configuration: {botName: "PythonGT"}});
+        }
+        updateTeacherContext();
+      });
+      window.botpress.on("webchat:ready", async () => {
+        botpressReady = true;
+        dispatchPendingTeacherMessage();
+      });
+      window.botpress.on("webchat:opened", () => {
+        dispatchPendingTeacherMessage();
+      });
+      window.botpress.on("error", () => { status.textContent = "Grapsy AI had a connection error. Please try again."; });
+      window.botpress.on("message", handleTeacherMessage);
+      return true;
+    }
+    async function dispatchPendingTeacherMessage() {
+      if (!pendingMessage || !botpressReady) return;
+      const pending = pendingMessage;
+      pendingMessage = null;
+      try { await window.botpress.sendMessage(pending.message); pending.resolve(); }
+      catch (error) { pending.reject(error); }
+    }
+    async function sendToTeacher(message) {
+      if (!attachBotpress()) {
+        await new Promise((resolve, reject) => {
+          let attempts = 0;
+          const timer = setInterval(() => {
+            if (attachBotpress()) { clearInterval(timer); resolve(); }
+            else if (++attempts >= 100) { clearInterval(timer); reject(new Error("Grapsy chat did not finish loading. Refresh the page and check your internet connection.")); }
+          }, 100);
+        });
+      }
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          if (pendingMessage?.message === message) pendingMessage = null;
+          reject(new Error("Grapsy chat did not open or become ready. Try again, or open the teacher chat first."));
+        }, 20000);
+        pendingMessage = {
+          message,
+          resolve: () => { clearTimeout(timeout); resolve(); },
+          reject: error => { clearTimeout(timeout); reject(error); }
+        };
+        try {
+          window.botpress.open();
+          // Some Webchat versions do not emit `webchat:opened` when already open.
+          // The lesson-start path also relies on `webchat:ready` when opening for the first time.
+          setTimeout(() => dispatchPendingTeacherMessage(), 1200);
+        } catch (error) {
+          pendingMessage = null;
+          clearTimeout(timeout);
+          reject(error);
+        }
+      });
+    }
+
+    function refreshLessonControls(disabled = false) {
+      const pause = document.getElementById("pause-lesson");
+      const resume = document.getElementById("resume-lesson");
+      const repeat = document.getElementById("repeat-lesson");
+      const example = document.getElementById("another-example");
+      pause.hidden = lessonPaused;
+      resume.hidden = !lessonPaused;
+      pause.disabled = !courseStarted || lessonPaused || disabled;
+      resume.disabled = !courseStarted || !lessonPaused || disabled;
+      repeat.disabled = !courseStarted || disabled;
+      example.disabled = !courseStarted || disabled;
+    }
+    async function sendLessonControl(prompt, onSuccess) {
+      refreshLessonControls(true);
+      status.textContent = "Sending your lesson request to PythonGT…";
+      try {
+        await updateTeacherContext(progress.level);
+        await sendToTeacher(prompt);
+        onSuccess?.();
+        status.textContent = "Request sent. Check the teacher chat.";
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        refreshLessonControls(false);
+      }
+    }
+    document.getElementById("pause-lesson").addEventListener("click", () => sendLessonControl(
+      "Please pause the lesson now. Briefly acknowledge, then wait for me to choose Resume before teaching or giving another challenge.",
+      () => { lessonPaused = true; }
+    ));
+    document.getElementById("resume-lesson").addEventListener("click", () => sendLessonControl(
+      "Please resume the lesson from where we paused. Continue with the current topic and challenge without repeating completed material.",
+      () => { lessonPaused = false; }
+    ));
+    document.getElementById("repeat-lesson").addEventListener("click", () => sendLessonControl(
+      "Please repeat the latest explanation for the current Python topic in simpler steps, keeping the current challenge unchanged."
+    ));
+    document.getElementById("another-example").addEventListener("click", () => sendLessonControl(
+      "Please show one different, short Python example for the current topic and explain it. Keep the current challenge unchanged and do not reveal its solution."
+    ));
+
+    document.getElementById("start-course").addEventListener("click", async () => {
+      const selectedLevel = levelPicker.value;
+      if (!selectedLevel) { status.textContent = "Choose your Python level before starting your lesson."; levelPicker.focus(); return; }
+      lessonStarting = true;
+      currentQuestion = "";
+      currentTopicId = "";
+      hintUsed = false;
+      status.textContent = "Connecting to PythonGT…";
+      try {
+        progress.level = selectedLevel;
+        currentTopicId = ({Beginner:"variables", Basic:"functions", Intermediate:"dictionaries", Advanced:"oop", Professional:"testing_apis"})[selectedLevel] || "variables";
+        saveProgress();
+        await updateTeacherContext(selectedLevel);
+        await sendToTeacher(`Hi Grapsy! I want to learn Python at the ${selectedLevel} level. Please start my lesson and include the exact course topic name in a short "Topic:" heading so my progress can be tracked.`);
+        courseStarted = true;
+        lessonPaused = false;
+        refreshLessonControls();
+        lessonStarting = false;
+        status.textContent = "Grapsy AI started your lesson. Read the generated challenge in the teacher chat.";
+      }
+      catch (error) { lessonStarting = false; courseStarted = false; status.textContent = error.message; }
+    });
+
+    document.getElementById("code-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!courseStarted) { status.textContent = "Start a lesson with Grapsy AI first so it can give you a coding challenge."; return; }
+      const code = editor.value.trim();
+      if (!code) { status.textContent = "Write your Python solution in the editor first."; return; }
+      const button = document.getElementById("submit-code");
+      button.disabled = true;
+      pendingSubmission = {question: currentQuestion, answer: code, hintUsed, level: progress.level || "", topicId: currentTopicId};
+      status.textContent = "Sending your code to Grapsy AI for review…";
+      awaitingCodeReview = true;
+      clearTimeout(reviewTimeout);
+      reviewTimeout = setTimeout(() => {
+        if (awaitingCodeReview) {
+          awaitingCodeReview = false;
+          setReview("pending", "Review is in the teacher chat", "Grapsy replied without a structured result. Read its full feedback in the chat, then you can submit another solution.");
+        }
+      }, 45000);
+      setReview("pending", "AI review in progress…", "Grapsy is checking your code against the current challenge.");
+      document.getElementById("corrected-code").style.display = "none";
+      document.getElementById("load-correction").style.display = "none";
+      const message = `Here is my Python solution for the current challenge:\n\n\`\`\`python\n${code}\n\`\`\``;
+      try { await sendToTeacher(message); progress.submissions = (progress.submissions || 0) + 1; saveProgress(); status.textContent = "Code sent. Grapsy AI is reviewing it in the teacher chat."; }
+      catch (error) { awaitingCodeReview = false; pendingSubmission = null; clearTimeout(reviewTimeout); setReview("error", "Could not review code", error.message); status.textContent = error.message; }
+      finally { button.disabled = false; }
+    });
+    document.getElementById("get-hint").addEventListener("click", async event => {
+      if (!courseStarted) {
+        status.textContent = "Start a lesson first so Grapsy can give you a hint for its current challenge.";
+        return;
+      }
+      const button = event.currentTarget;
+      button.disabled = true;
+      status.textContent = "Asking Grapsy for a hint…";
+      const previousHintState = hintUsed;
+      hintReplyExpected = true;
+      try {
+        await updateTeacherContext(progress.level);
+        await sendToTeacher("Can I have a small hint for the current Python challenge? Please give me one clue without showing the solution.");
+        hintUsed = true;
+        status.textContent = "Hint sent. Check the teacher chat, then try the challenge in the editor.";
+      } catch (error) {
+        hintReplyExpected = false;
+        hintUsed = previousHintState;
+        status.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+    document.getElementById("load-correction").addEventListener("click", () => {
+      const corrected = document.getElementById("corrected-code").textContent;
+      if (!corrected) return;
+      editor.value = corrected;
+      updateLineNumbers();
+      editor.dispatchEvent(new Event("input", {bubbles:true}));
+      editor.focus();
+    });
+    document.getElementById("clear-code").addEventListener("click", () => { editor.value = ""; updateLineNumbers(); editor.dispatchEvent(new Event("input", {bubbles:true})); editor.focus(); });
+    const botpressWait = setInterval(() => { if (attachBotpress()) clearInterval(botpressWait); }, 100);
+  </script>
+  <script>
+    (() => {
+      const panel = document.getElementById("people-search");
+      const input = document.getElementById("people-search-input");
+      const results = document.getElementById("people-search-results");
+      const status = document.getElementById("people-search-status");
+      const csrfToken = panel.dataset.csrfToken;
+      let timer;
+      let controller;
+
+      function renderUser(user) {
+        const row = document.createElement("article");
+        row.className = "people-result";
+        const avatar = document.createElement("span");
+        avatar.className = "people-result-avatar";
+        if (user.profile_picture_url) {
+          const image = document.createElement("img");
+          image.src = user.profile_picture_url;
+          image.alt = "";
+          avatar.appendChild(image);
+        } else {
+          avatar.textContent = (user.name || user.username || "?").slice(0, 1).toUpperCase();
+        }
+        const copy = document.createElement("span");
+        copy.className = "people-result-copy";
+        const name = document.createElement("strong");
+        name.textContent = user.name || user.username;
+        const username = document.createElement("small");
+        username.textContent = `@${user.username}`;
+        copy.append(name, username);
+        const actions = document.createElement("span");
+        actions.className = "people-result-actions";
+        if (user.can_message) {
+          const chat = document.createElement("a");
+          chat.href = `/messages/${user.id}`;
+          chat.textContent = "Message";
+          actions.appendChild(chat);
+        }
+        const report = document.createElement("button");
+        report.type = "button";
+        report.className = "safety-action";
+        report.dataset.safetyReportUser = user.id;
+        report.textContent = "⚑ Report";
+        const block = document.createElement("button");
+        block.type = "button";
+        block.className = "safety-action danger";
+        block.dataset.safetyBlockUser = user.id;
+        block.textContent = "⊘ Block";
+        actions.append(report, block);
+        const follow = document.createElement("button");
+        follow.type = "button";
+        follow.className = "follow-toggle";
+        follow.dataset.userId = user.id;
+        follow.dataset.following = String(user.following);
+        follow.textContent = user.following ? "Following" : (user.follows_you ? "Follow back" : "Follow");
+        actions.appendChild(follow);
+        if (user.following && !user.can_message) {
+          const note = document.createElement("small");
+          note.textContent = "Follow each other to message";
+          note.style.color = "#9eafc3";
+          actions.appendChild(note);
+        }
+        row.append(avatar, copy, actions);
+        return row;
+      }
+
+      async function searchUsers(query) {
+        controller?.abort();
+        controller = null;
+        const normalized = query.trim();
+        results.replaceChildren();
+        results.hidden = true;
+        if (normalized.length < 2) {
+          status.textContent = "Type at least 2 characters to search Grapsy.";
+          return;
+        }
+        controller = new AbortController();
+        status.textContent = "Searching…";
+        try {
+          const response = await fetch(`/api/users/search?q=${encodeURIComponent(normalized)}`, { headers: { Accept: "application/json" }, signal: controller.signal });
+          const data = await response.json();
+          if (!response.ok || !data.ok) throw new Error(data.error || "Search could not be completed.");
+          if (input.value.trim() !== normalized) return;
+          if (!data.users.length) {
+            status.textContent = "No Grapsy users found for that search.";
+            return;
+          }
+          data.users.forEach(user => results.appendChild(renderUser(user)));
+          results.hidden = false;
+          status.textContent = `${data.users.length} result${data.users.length === 1 ? "" : "s"}`;
+        } catch (error) {
+          if (error.name !== "AbortError") status.textContent = error.message;
+        }
+      }
+
+      input.addEventListener("input", () => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => searchUsers(input.value), 250);
+      });
+      results.addEventListener("click", async event => {
+        const button = event.target.closest(".follow-toggle");
+        if (!button) return;
+        const wasFollowing = button.dataset.following === "true";
+        button.disabled = true;
+        const body = new FormData();
+        body.append("csrf_token", csrfToken);
+        try {
+          const response = await fetch(`/users/${button.dataset.userId}/${wasFollowing ? "unfollow" : "follow"}`, { method: "POST", body, headers: { Accept: "application/json" } });
+          const data = await response.json();
+          if (!response.ok || !data.ok) throw new Error(data.error || "Could not update follow status.");
+          await searchUsers(input.value);
+        } catch (error) {
+          status.textContent = error.message;
+          button.disabled = false;
+        }
+      });
+    })();
+  </script>
+  {% include "safety_dialog.html" %}
+  {% include "legal_footer.html" %}
+  <script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/10/09/02/20261009020623-N15TKJTM.js" defer></script>
+</body>
+</html>

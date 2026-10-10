@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in | Grapsy</title>
+  <link rel="stylesheet" href="/static/css/signup.css">
+  <style>
+    .login-shell{position:relative;z-index:1;display:grid;grid-template-columns:1fr .82fr;width:min(1040px,100%);min-height:620px;margin:auto;overflow:hidden;background:rgba(5,17,34,.84);border:1px solid var(--gold-line);border-radius:28px;box-shadow:0 36px 90px -35px #000c,inset 0 1px #ffffff0c;backdrop-filter:blur(18px)}
+    .login-intro{display:flex;flex-direction:column;justify-content:space-between;padding:42px 46px;background:radial-gradient(ellipse at 12% 20%,#17457990,transparent 45%),linear-gradient(150deg,#0c2038,#071426 72%);border-right:1px solid #ffffff12}
+    .login-intro .brand{align-self:flex-start}
+    .intro-copy{max-width:440px;margin:auto 0;padding:54px 0}
+    .intro-kicker,.auth-kicker{color:var(--gold-light);font-size:.76rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .intro-copy h1{max-width:430px;margin:.8rem 0 1rem;font-size:clamp(2.65rem,5vw,4.4rem);line-height:.98}
+    .intro-copy p{max-width:390px;color:var(--muted);line-height:1.8}
+    .code-preview{margin-top:32px;padding:15px 17px;border:1px solid #ffffff1b;border-radius:14px;background:#050d18b8;box-shadow:0 18px 38px #0003;font:13px/1.9 ui-monospace,Consolas,monospace;color:#cbd7e8}
+    .code-preview-head{display:flex;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #ffffff15;color:#91a3ba;font:11px system-ui,sans-serif}
+    .code-preview .kw{color:#c792ea}.code-preview .fn{color:#82aaff}.code-preview .str{color:#c3e88d}
+    .intro-foot{color:#71839b;font-size:12px}
+    .login-card{width:100%;margin:auto;padding:54px 44px;background:transparent;border:0;border-radius:0;box-shadow:none}
+    .login-card h2{margin:10px 0 6px;font:700 2rem var(--body);color:#fff}
+    .login-card .description{margin-bottom:24px;font-size:.94rem}
+    .login-card .input-box{margin:18px 0}
+    .login-card .primary-button{width:100%;margin-top:10px}
+    .social-buttons{display:grid;gap:10px;margin:20px 0}
+    .social-button{display:flex;align-items:center;justify-content:center;min-height:48px;padding:11px 16px;text-align:center;border:1px solid var(--field-line);border-radius:12px;color:var(--ink);text-decoration:none;font-weight:700;background:#ffffff08;transition:background .18s,border-color .18s,transform .18s}
+    .social-button:hover{background:#ffffff12;border-color:#f2b13480;transform:translateY(-1px)}
+    .divider{display:flex;align-items:center;gap:12px;color:#8291a8;font-size:12px;margin:22px 0}.divider::before,.divider::after{content:"";height:1px;flex:1;background:#ffffff18}
+    .login-message{min-height:22px;color:var(--error-soft);font-size:13px}
+    .login-footer{text-align:center;margin-top:22px;padding-top:18px;border-top:1px solid #ffffff12;color:var(--muted);font-size:13px}
+    .login-footer a{color:var(--gold-light);font-weight:700;text-decoration:none}.login-footer a:hover{text-decoration:underline;text-underline-offset:3px}
+    @media(max-width:800px){.login-shell{grid-template-columns:1fr;max-width:540px;min-height:0}.login-intro{padding:28px 30px 20px;border-right:0;border-bottom:1px solid #ffffff12}.intro-copy{padding:36px 0 10px}.intro-copy h1{font-size:2.7rem}.code-preview,.intro-foot{display:none}.login-card{padding:32px 30px 36px}}
+    @media(max-width:420px){.signup-body{padding:.6rem}.login-shell{border-radius:20px}.login-intro{padding:20px 22px 14px}.intro-copy{padding:24px 0 4px}.intro-copy h1{font-size:2.25rem}.login-card{padding:26px 22px 28px}}
+  </style>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+</head>
+<body class="signup-body">
+  <div class="background"><div class="gradient-orb orb-1"></div><div class="gradient-orb orb-2"></div></div>
+  <main class="login-shell">
+    <section class="login-intro" aria-label="About Grapsy">
+      <a href="/" class="brand">Grapsy</a>
+      <div class="intro-copy">
+        <span class="intro-kicker">Your Python learning space</span>
+        <h1>Learn by doing. Grow with every line.</h1>
+        <p>Get coding challenges shaped around your level, then learn from clear feedback on your own Python code.</p>
+        <div class="code-preview" aria-hidden="true">
+          <div class="code-preview-head"><span>✦&nbsp; A little progress, every day</span><span>python</span></div>
+          <div><span class="kw">for</span> idea <span class="kw">in</span> practice:</div>
+          <div>&nbsp;&nbsp;learn(idea)</div>
+          <div>&nbsp;&nbsp;<span class="kw">if</span> mistake:</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;try_again(<span class="str">"you've got this"</span>)</div>
+        </div>
+      </div>
+      <div class="intro-foot">A calmer way to get better at Python.</div>
+    </section>
+    <section class="login-card" aria-label="Log in to Grapsy">
+      <span class="auth-kicker">Your next lesson is waiting</span>
+      <h2>Welcome back</h2>
+      <p class="description">Log in to continue learning with Grapsy.</p>
+      <div class="social-buttons">
+        <a class="social-button" href="/auth/google">Continue with Google</a>
+        <a class="social-button" href="/auth/facebook">Continue with Facebook</a>
+      </div>
+      <div class="divider">or log in with email</div>
+      <form id="loginForm">
+        <div class="input-box"><input type="email" id="email" name="email" placeholder=" " autocomplete="email" required><label for="email">Email address</label></div>
+        <div class="input-box"><input type="password" id="password" name="password" placeholder=" " autocomplete="current-password" required><label for="password">Password</label></div>
+        <p class="login-message" id="loginMessage" role="alert"></p>
+        <button type="submit" class="primary-button"><span>Log in</span><span class="arrow">→</span></button>
+      </form>
+      <div class="login-footer">Don't have an account? <a href="/signup">Create account</a></div>
+    </section>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const errors = {provider_unconfigured:"This sign-in option is not configured yet.",email_unverified:"The provider did not return a verified email address.",oauth_failed:"Social sign-in failed. Please try again."};
+    if (errors[params.get("error")]) document.getElementById("loginMessage").textContent = errors[params.get("error")];
+    document.getElementById("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const button = event.currentTarget.querySelector("button"); button.disabled = true;
+      try {
+        const response = await fetch("/login", {method:"POST", body:new FormData(event.currentTarget)});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Could not log in.");
+        location.href = data.redirect || "/dashboard";
+      } catch (error) { document.getElementById("loginMessage").textContent = error.message; button.disabled = false; }
+    });
+  </script>
+  {% include "legal_footer.html" %}
+</body>
+</html>

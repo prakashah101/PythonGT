@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06101d">
+  <title>Projects | Grapsy</title>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/python-editor.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+  <script src="/static/js/python-editor.js" defer></script>
+  <script src="/static/js/safety-tools.js" defer></script>
+  <style>
+    :root{color-scheme:dark;--ink:#f3f6fb;--muted:#a9b7c9;--line:#354563;--purple:#bca9ff;--blue:#78b7ff;--mono:ui-monospace,Consolas,monospace}
+    *{box-sizing:border-box}body{min-height:100vh;margin:0;color:var(--ink);font:16px/1.6 system-ui,Segoe UI,sans-serif}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(18px,5vw,72px);border-bottom:1px solid #9f8fff35;background:#050b18d9}
+    .brand{display:flex;align-items:center;gap:11px;color:#fff;font-size:20px;font-weight:800;text-decoration:none}.brand img{width:40px;height:40px;object-fit:cover;border-radius:50%}
+    .header-actions{display:flex;align-items:center;gap:9px}.header-link,.user-chip{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid #9f8fff45;border-radius:999px;background:#0b1427;color:#e8e2ff;text-decoration:none;font-size:13px;font-weight:700}.user-chip{color:#bdcbe0}
+    main{width:min(1160px,calc(100% - 36px));margin:0 auto;padding:clamp(36px,7vw,76px) 0}.eyebrow{color:var(--purple);font:700 12px var(--mono);letter-spacing:.15em;text-transform:uppercase}.intro{max-width:680px;color:var(--muted)}h1{margin:8px 0;font-size:clamp(38px,7vw,64px);line-height:1.05;letter-spacing:-.045em}h2{margin:0 0 8px;font-size:22px}.panel{margin-top:26px;padding:clamp(19px,3vw,28px);border:1px solid #a597ff52;border-radius:20px;background:linear-gradient(145deg,#111a38f7,#070f22fa);box-shadow:0 20px 50px #0007,inset 0 1px #ffffff0c}.create-grid{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(220px,1.2fr);gap:14px}.field{display:grid;gap:6px}.field label{color:#d9d3ff;font-size:13px;font-weight:700}.field input,.field textarea{width:100%;border:1px solid #414366;border-radius:11px;background:#080e1d;color:var(--ink);font:14px/1.55 system-ui,sans-serif}.field input{min-height:44px;padding:0 12px}.field textarea{min-height:92px;padding:11px 12px;resize:vertical}.create-code{grid-column:1/-1}.code-field textarea,.code-editor{font:13px/1.65 var(--mono);tab-size:4}.button-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:41px;padding:0 15px;border:1px solid #917cff80;border-radius:11px;background:linear-gradient(135deg,#7658e8,#5138ad);color:#fff;font-weight:750;text-decoration:none;cursor:pointer;transition:transform .18s,filter .18s,border-color .18s}.button:hover{transform:translateY(-1px);filter:brightness(1.12)}.button:disabled{opacity:.65;cursor:wait;transform:none}.button.secondary{border-color:#454769;background:#171b35;color:#e2e4f2}.button.danger{border-color:#a2566b80;background:#321927;color:#ffdce2}.status{min-height:22px;margin:8px 0 0;color:#a8d5ff;font-size:13px}.empty{padding:26px;text-align:center;color:var(--muted)}.starter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px;margin-top:18px}.starter-card{min-width:0;padding:18px;border:1px solid #9f8fff40;border-radius:16px;background:linear-gradient(145deg,#121a36f5,#080f20f7)}.starter-card h3{margin:0;font-size:17px}.starter-description{min-height:44px;margin:6px 0 10px;color:var(--muted);font-size:13px}.starter-level{display:inline-flex;margin-bottom:9px;padding:3px 8px;border:1px solid #9f8fff35;border-radius:999px;color:#d0c6ff;font:10px var(--mono);text-transform:uppercase}.starter-card details{border-top:1px solid #9f8fff2b;padding-top:9px}.starter-card summary{color:#c9c1ff;font-size:13px;font-weight:700;cursor:pointer}.starter-code{max-height:230px;overflow:auto;margin:9px 0 0;padding:12px;border:1px solid #303955;border-radius:10px;background:#050912;color:#d7e3f4;font:11px/1.6 var(--mono);tab-size:4;white-space:pre;}
+    .project-list{display:grid;gap:18px;margin-top:28px}.project-card{scroll-margin-top:20px;padding:clamp(18px,3vw,25px);border:1px solid #9f8fff45;border-radius:20px;background:linear-gradient(145deg,#141a38f7,#070f22fa);box-shadow:0 18px 42px #0006,inset 0 1px #ffffff0b}.project-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:17px}.project-top h2{margin:0}.project-date{display:grid;justify-items:end;gap:7px;color:#a9a5c5;font:11px var(--mono)}.editor-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(260px,.95fr);gap:14px}.code-editor{min-height:255px;resize:vertical;background:#080d18!important;color:#d9e7f9!important}.description-editor{min-height:92px}.run-area{display:grid;grid-template-rows:auto 1fr;gap:9px;min-height:255px}.terminal{min-height:210px;max-height:350px;overflow:auto;margin:0;padding:14px;border:1px solid #293852;border-radius:12px;background:#050912;color:#cfe2ff;font:12px/1.6 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}.project-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}.small-note{color:#929db4;font-size:12px}.bottom-link{display:inline-flex;margin-top:25px;color:#b9d9ff;font-weight:700;text-decoration:none}.bottom-link:hover{color:white}
+    .visibility-field{display:grid;gap:6px;min-width:160px}.visibility-field label{color:#d9d3ff;font-size:12px;font-weight:700}.visibility-select{min-height:38px;padding:0 10px;border:1px solid #514a77;border-radius:9px;background:#090e1d;color:#eeeaff;font:13px system-ui,sans-serif}.create-output{min-height:82px;max-height:230px;margin-top:12px}.community-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:16px;margin-top:18px}.community-post{min-width:0;padding:19px;border:1px solid #a597ff55;border-radius:17px;background:linear-gradient(145deg,#191c3df5,#080f20fa);box-shadow:0 18px 42px #0006}.post-author{display:flex;align-items:center;gap:10px;margin-bottom:14px}.post-avatar{display:grid;width:38px;height:38px;flex:none;place-items:center;overflow:hidden;border:1px solid #bca9ff75;border-radius:50%;background:#30275a;color:#eeeaff;font-weight:800}.post-avatar img{width:100%;height:100%;object-fit:cover}.post-byline{display:grid;line-height:1.3}.post-byline strong{font-size:13px}.post-byline small{color:#a9a5c5;font-size:11px}.grapsy-tag{margin-left:auto;padding:5px 9px;border:1px solid #a597ff55;border-radius:999px;background:#9a67ff1c;color:#d3c8ff;font:11px var(--mono)}.follow-form{margin:0}.follow-button{min-height:32px;padding:0 11px;border:1px solid #a597ff75;border-radius:999px;background:#211a40;color:#e3dbff;font-size:11px;font-weight:750;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}.follow-button:hover{transform:translateY(-1px);border-color:#c8baff;background:#30265b}.post-description{min-height:40px;color:var(--muted);font-size:13px}.community-code{max-height:230px;margin:10px 0;padding:12px;border:1px solid #303955;border-radius:10px;background:#050912;color:#d7e3f4;font:11px/1.6 var(--mono);overflow:auto;white-space:pre}.community-post .terminal{min-height:80px;max-height:220px}.community-post .button-row{align-items:end}.create-grid>.visibility-field{grid-column:1/-1}
+    .follow-button[href]{display:inline-flex;align-items:center;text-decoration:none}
+    @media(max-width:760px){.editor-grid{grid-template-columns:1fr}.run-area{min-height:180px}.terminal{min-height:140px}.create-grid{grid-template-columns:1fr}.create-code{grid-column:auto}}
+    @media(max-width:520px){header{align-items:flex-start;flex-wrap:wrap}.header-actions{width:100%}.header-link,.user-chip{min-height:36px;padding:0 11px;font-size:12px}main{padding-top:36px}.project-top,.project-bottom{align-items:flex-start;flex-direction:column}.project-bottom .button-row{width:100%}.project-bottom .button{flex:1}.post-author{flex-wrap:wrap}.post-byline{min-width:calc(100% - 60px);flex:1}.grapsy-tag{margin-left:48px}}
+  </style>
+</head>
+<body data-safety-csrf="{{ safety_csrf }}">
+  <header>
+    <a class="brand" href="/projects" aria-label="Grapsy Projects"><img src="/static/img/logo-badge.png" alt=""><span>Grapsy Projects</span></a>
+    <nav class="header-actions" aria-label="Account navigation">{% if username %}<a class="header-link" href="/messages">Messages</a><a class="header-link" href="/dashboard">Dashboard</a><a class="header-link" href="/feedback">Feedback</a><a class="user-chip" href="/profile">{{ username }}</a>{% else %}<a class="header-link" href="/login">Log in</a><a class="header-link" href="/signup">Sign up</a>{% endif %}</nav>
+  </header>
+  <main>
+    <p class="eyebrow">Learn by building</p>
+    <h1>{{ "Your Python projects" if username else "Grapsy Python projects" }}</h1>
+    <p class="intro">{% if username %}Create projects, write and run Python in your browser, and choose whether each project is private or shared with the Grapsy community.{% else %}Browse public Python projects shared by the Grapsy community. Log in to create and save your own projects.{% endif %}</p>
+
+    <section class="panel" id="community" aria-labelledby="community-heading">
+      <p class="eyebrow">#Grapsy</p>
+      <h2 id="community-heading">Community projects</h2>
+      <p class="intro">Projects their creators marked public. You can inspect and run the code.</p>
+      {% if community_projects %}
+      <div class="community-grid">
+        {% for project, author in community_projects %}
+        <article class="community-post">
+          <div class="post-author">
+            <span class="post-avatar">{% if author.profile_picture_url %}<img src="{{ author.profile_picture_url }}" alt="">{% else %}{{ author.username[:1] | upper }}{% endif %}</span>
+            <span class="post-byline"><strong>{{ author.first_name }} {{ author.last_name }}</strong><small>@{{ author.username }} · {{ follower_counts.get(author.id, 0) }} followers · {{ to_nepal_time(project.updated_at).strftime('%b %d, %Y · %H:%M NPT') }}</small></span>
+            <span class="grapsy-tag">#Grapsy</span>
+            {% if username %}<form class="follow-form" method="post" action="/users/{{ author.id }}/{{ 'unfollow' if author.id in followed_user_ids else 'follow' }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="follow-button" type="submit" aria-label="{{ 'Unfollow' if author.id in followed_user_ids else 'Follow' }} @{{ author.username }}">{{ 'Unfollow' if author.id in followed_user_ids else 'Follow' }}</button></form><button class="safety-action" type="button" data-safety-report-user="{{ author.id }}" aria-label="Report @{{ author.username }}">⚑ Report</button><button class="safety-action danger" type="button" data-safety-block-user="{{ author.id }}" aria-label="Block @{{ author.username }}">⊘ Block</button>{% else %}<a class="follow-button" href="/login">Follow</a>{% endif %}
+          </div>
+          <h3>{{ project.title }}</h3>
+          <p class="post-description">{{ project.description or "Python project shared with the Grapsy community." }}</p>
+          <details><summary>View Python code</summary><pre class="community-code" id="community-code-{{ project.id }}"><code>{{ project.code }}</code></pre></details>
+          <pre class="terminal" id="community-output-{{ project.id }}" aria-live="polite">Run this code to see its output.</pre>
+          <div class="button-row"><button class="button run-button" type="button" data-code="community-code-{{ project.id }}" data-output="community-output-{{ project.id }}">▶ Run code</button>{% if author.id in friend_user_ids %}<a class="button secondary" href="/messages/{{ author.id }}">Chat</a>{% endif %}</div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty">{% if username %}No community projects yet. Set one of your projects to Public to share it here.{% else %}No public projects have been shared yet.{% endif %}</p>
+      {% endif %}
+    </section>
+
+    {% if username %}
+    <section class="panel" aria-labelledby="create-heading">
+      <h2 id="create-heading">Create a project</h2>
+      <form method="post" action="/projects/create">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="create-grid">
+          <div class="field"><label for="new-title">Project name</label><input id="new-title" name="title" maxlength="100" required placeholder="For example, Number guessing game"></div>
+          <div class="field"><label for="new-description">What are you building?</label><input id="new-description" name="description" maxlength="500" placeholder="A short project description"></div>
+          <div class="field create-code code-field"><label for="new-code">Starter Python code</label><div class="ide-frame" data-python-editor><div class="ide-titlebar"><span class="ide-lights"><i></i><i></i><i></i></span><span class="ide-file">new_project.py <small>Python</small></span><span class="ide-language">Python 3</span></div><div class="ide-main"><div class="ide-gutter" aria-hidden="true"><pre>1</pre></div><div class="ide-stage"><pre class="ide-highlight" aria-hidden="true"><code></code></pre><textarea id="new-code" class="code-editor python-editor-input" name="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" placeholder="# Start writing Python here"></textarea></div></div><div class="ide-status"><span class="ide-position">Ln 1, Col 1</span><span>Spaces: 4</span><span>Python</span></div></div></div>
+          <div class="visibility-field"><label for="new-visibility">Who can see this project?</label><select class="visibility-select" id="new-visibility" name="visibility" required><option value="" selected disabled>Choose visibility</option><option value="private">Private · only you</option><option value="public">Public · Grapsy community</option></select></div>
+        </div>
+        <div class="button-row"><button class="button secondary run-button" type="button" data-editor="new-code" data-output="new-code-output">▶ Run code</button><button class="button" type="submit">Create project</button></div>
+        <pre class="terminal create-output" id="new-code-output" aria-live="polite">Run your code to check the output before saving.</pre>
+      </form>
+    </section>
+    {% endif %}
+
+    <section class="panel" id="library" aria-labelledby="library-heading">
+      <p class="eyebrow">20 runnable examples</p>
+      <h2 id="library-heading">Project starter library</h2>
+      <p class="intro">Open “View Python code” to inspect a project. Run any example here, or add a copy to your saved projects to edit it.</p>
+      <div class="starter-grid">
+        {% for starter in starters %}
+        <article class="starter-card">
+          <span class="starter-level">{{ starter.level }}</span>
+          <h3>{{ starter.title }}</h3>
+          <p class="starter-description">{{ starter.description }}</p>
+          <details>
+            <summary>View Python code</summary>
+            <pre class="starter-code" id="starter-code-{{ starter.slug }}"><code>{{ starter.code }}</code></pre>
+          </details>
+          <pre class="terminal" id="starter-output-{{ starter.slug }}" aria-live="polite">Run this example to see its output.</pre>
+          <div class="button-row">
+            <button class="button run-button" type="button" data-code="starter-code-{{ starter.slug }}" data-output="starter-output-{{ starter.slug }}">▶ Run</button>
+            {% if username %}<form method="post" action="/projects/starter/{{ starter.slug }}/create">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <label class="visibility-field"><span>Copy visibility</span><select class="visibility-select" name="visibility" required><option value="" selected disabled>Choose visibility</option><option value="private">Private</option><option value="public">Public</option></select></label>
+              <button class="button secondary" type="submit" style="margin-top:8px">Add to my projects</button>
+            </form>{% else %}<a class="button secondary" href="/login">Log in to save a copy</a>{% endif %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% if username and projects %}
+    <section class="project-list" aria-label="Your saved projects">
+      {% for project in projects %}
+      <article class="project-card" id="{{ project.id }}">
+        <div class="project-top"><div><p class="eyebrow">Saved project</p><h2>{{ project.title }}</h2></div><div class="project-date"><span class="grapsy-tag">{{ "#Grapsy · Public" if project.is_public else "Private · only you" }}</span><time datetime="{{ to_nepal_time(project.updated_at).isoformat() }}">Updated {{ to_nepal_time(project.updated_at).strftime('%Y-%m-%d %H:%M NPT') }}</time></div></div>
+        <form method="post" action="/projects/{{ project.id }}/save" class="save-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <div class="editor-grid">
+            <div class="field"><label for="title-{{ project.id }}">Project name</label><input id="title-{{ project.id }}" name="title" maxlength="100" required value="{{ project.title }}"><label for="description-{{ project.id }}">Description</label><textarea class="description-editor" id="description-{{ project.id }}" name="description" maxlength="500">{{ project.description }}</textarea><label for="code-{{ project.id }}">Python code</label><div class="ide-frame" data-python-editor><div class="ide-titlebar"><span class="ide-lights"><i></i><i></i><i></i></span><span class="ide-file">{{ project.title }}.py <small>Python</small></span><span class="ide-language">Python 3</span></div><div class="ide-main"><div class="ide-gutter" aria-hidden="true"><pre>1</pre></div><div class="ide-stage"><pre class="ide-highlight" aria-hidden="true"><code></code></pre><textarea class="code-editor python-editor-input" id="code-{{ project.id }}" name="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off">{{ project.code }}</textarea></div></div><div class="ide-status"><span class="ide-position">Ln 1, Col 1</span><span>Spaces: 4</span><span>Python</span></div></div><label for="visibility-{{ project.id }}">Visibility · {{ "Public" if project.is_public else "Private" }}</label><select class="visibility-select" id="visibility-{{ project.id }}" name="visibility"><option value="private" {% if not project.is_public %}selected{% endif %}>Private · only you</option><option value="public" {% if project.is_public %}selected{% endif %}>Public · Grapsy community</option></select></div>
+            <div class="run-area"><div class="button-row" style="margin:0"><button class="button run-button" type="button" data-editor="code-{{ project.id }}" data-output="output-{{ project.id }}">▶ Run code</button></div><pre class="terminal" id="output-{{ project.id }}" aria-live="polite">Run your code to see its output here.</pre></div>
+          </div>
+          <div class="project-bottom"><span class="small-note">Saved to your account. Run output is temporary.</span><div class="button-row" style="margin:0"><button class="button" type="submit">Save changes</button></div></div>
+        </form>
+        <form method="post" action="/projects/{{ project.id }}/delete" class="delete-form" style="margin-top:8px"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="button danger" type="submit">Delete project</button></form>
+      </article>
+      {% endfor %}
+    </section>
+    {% elif username %}
+    <section class="panel empty"><h2>No projects yet</h2><p>Create your first project above. Your saved work will appear here.</p></section>
+    {% endif %}
+    <a class="bottom-link" href="{{ '/dashboard' if username else '/login' }}">← {{ 'Open PythonGT to continue learning' if username else 'Log in to start learning' }}</a>
+  </main>
+  {% include "safety_dialog.html" %}
+  {% include "legal_footer.html" %}
+  <script>
+    document.querySelectorAll(".delete-form").forEach(form => form.addEventListener("submit", event => {
+      if (!window.confirm("Delete this project and its saved code?")) event.preventDefault();
+    }));
+    document.querySelectorAll(".run-button").forEach(button => button.addEventListener("click", () => {
+      const editor = document.getElementById(button.dataset.editor);
+      const codeBlock = document.getElementById(button.dataset.code);
+      const output = document.getElementById(button.dataset.output);
+      const code = editor ? editor.value : codeBlock?.textContent;
+      if (code === undefined || !output) return;
+      button.closest(".starter-card, .community-post")?.querySelector("details")?.setAttribute("open", "");
+      output.textContent = "Starting Python…";
+      button.disabled = true;
+      let worker;
+      try { worker = new Worker("/static/js/python-runner-worker.js"); }
+      catch (error) { output.textContent = `Could not start Python: ${error.message}`; button.disabled = false; return; }
+      let outputText = "";
+      worker.onmessage = event => {
+        const message = event.data || {};
+        if (message.type === "stdout" || message.type === "stderr") {
+          outputText += message.text || "";
+          output.textContent = outputText || "(no output)";
+        } else if (message.type === "error") {
+          outputText += message.text || "Python error";
+          output.textContent = outputText;
+        } else if (message.type === "ready") {
+          output.textContent = "Running…";
+          worker.postMessage({ type: "run", code, stdin: "" });
+        } else if (message.type === "done") {
+          if (!outputText) output.textContent = "Code finished with no output.";
+          button.disabled = false;
+          worker.terminate();
+        } else if (message.type === "loading") output.textContent = "Loading Python runtime…";
+      };
+      worker.onerror = error => {
+        output.textContent = `Python runner error: ${error.message || "unknown error"}`;
+        button.disabled = false;
+        worker.terminate();
+      };
+      worker.postMessage({ type: "init" });
+    }));
+  </script>
+</body>
+</html>

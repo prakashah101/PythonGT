@@ -1,0 +1,17 @@
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <a class="site-footer-brand" href="{{ '/dashboard' if request.session.get('user_id') else '/' }}" aria-label="Grapsy home"><img src="/static/img/logo-badge.png" alt=""><strong>Grapsy</strong></a>
+    <small>© 2026 Grapsy · Learn · Build · Grow</small>
+    <nav class="legal-links" aria-label="Privacy, terms, and safety">
+      <a href="/privacy" title="Privacy Notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg><span>Privacy</span>
+      </a>
+      <a href="/terms" title="Terms and Conditions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span>Terms</span>
+      </a>
+      <a href="/safety" title="Safety Center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="M12 8v4M12 16h.01"/></svg><span>Safety</span>
+      </a>
+    </nav>
+  </div>
+</footer>

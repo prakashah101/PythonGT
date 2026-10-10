@@ -1,0 +1,1075 @@
+/* =========================================================
+   GRAPSY — SIGNUP PAGE (new_account.css)
+   Theme: deep navy, gold, electric blue and violet,
+   taken from the Grapsy logo.
+   Used by: templates/signup.html
+========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap");
+
+
+/* =========================================================
+   TOKENS
+========================================================= */
+
+:root {
+    --bg: #020c18;
+    --bg-deep: #010713;
+    --panel: #07162b;
+    --ink: #EAF0FA;
+    --muted: #9DAAC4;
+    --field: rgba(255, 255, 255, 0.045);
+    --field-line: rgba(157, 170, 196, 0.30);
+
+    --gold: #F2B134;
+    --gold-light: #FFD772;
+    --gold-line: rgba(242, 177, 52, 0.35);
+
+    --blue: #2F8CFF;
+    --cyan: #29B6FF;
+    --violet: #8B5CF6;
+
+    --error: #FF6B7A;
+    --error-soft: #FF9AA5;
+
+    --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --body: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 3px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.signup-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 1.25rem;
+    font-family: var(--body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg);
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   ANIMATED BACKGROUND
+========================================================= */
+
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    will-change: transform;
+}
+
+.orb-1 {
+    top: -12%;
+    left: -10%;
+    width: min(560px, 70vw);
+    aspect-ratio: 1;
+    background: rgba(47, 140, 255, 0.34);
+    animation: drift-a 22s ease-in-out infinite alternate;
+}
+
+.orb-2 {
+    right: -12%;
+    bottom: -14%;
+    width: min(620px, 80vw);
+    aspect-ratio: 1;
+    background: rgba(139, 92, 246, 0.30);
+    animation: drift-b 26s ease-in-out infinite alternate;
+}
+
+.orb-3 {
+    top: 42%;
+    right: 18%;
+    width: min(300px, 40vw);
+    aspect-ratio: 1;
+    background: rgba(242, 177, 52, 0.16);
+    animation: drift-c 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+    to { transform: translate(90px, 70px) scale(1.12); }
+}
+
+@keyframes drift-b {
+    to { transform: translate(-80px, -60px) scale(1.1); }
+}
+
+@keyframes drift-c {
+    to { transform: translate(-60px, 50px) scale(0.85); }
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.signup-container {
+    position: relative;
+    z-index: 1;
+    width: min(580px, 100%);
+    margin: auto;
+    padding: 1.5rem 2rem 1.4rem;
+    background: rgba(5, 17, 34, 0.80);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--gold-line);
+    border-radius: 26px;
+    box-shadow:
+        0 36px 80px -34px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+
+/* =========================================================
+   HEADER + PROGRESS
+========================================================= */
+
+.signup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+    text-decoration: none;
+}
+
+.brand::before {
+    content: "";
+    width: 38px;
+    height: 38px;
+    flex: none;
+    border-radius: 50%;
+    background: url("../img/logo-badge.png") center / cover no-repeat;
+}
+
+.progress-area {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex: 1;
+    max-width: 230px;
+}
+
+.progress-number {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.progress-number #currentStep {
+    color: var(--gold-light);
+}
+
+.progress-number .slash {
+    margin-inline: 0.1rem;
+    opacity: 0.6;
+}
+
+.progress-track {
+    flex: 1;
+    height: 6px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 99px;
+}
+
+.progress-bar {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--violet));
+    border-radius: 99px;
+    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =========================================================
+   FORM + STEPS
+   Steps share one grid cell so the leaving step and the
+   arriving step can overlap while they slide.
+========================================================= */
+
+.signup-form {
+    display: grid;
+    overflow-x: clip;
+}
+
+.step {
+    display: none;
+    grid-area: 1 / 1;
+    min-width: 0;
+}
+
+.step.active,
+.step.exit-left,
+.step.exit-right,
+.step.enter-left,
+.step.enter-right {
+    display: block;
+}
+
+.step.exit-left   { animation: slide-out-left  0.45s ease both; pointer-events: none; }
+.step.exit-right  { animation: slide-out-right 0.45s ease both; pointer-events: none; }
+.step.enter-right { animation: slide-in-right  0.45s ease both; }
+.step.enter-left  { animation: slide-in-left   0.45s ease both; }
+
+.step.shake {
+    animation: shake 0.45s ease;
+}
+
+@keyframes slide-out-left  { to   { opacity: 0; transform: translateX(-48px); } }
+@keyframes slide-out-right { to   { opacity: 0; transform: translateX(48px); } }
+@keyframes slide-in-right  { from { opacity: 0; transform: translateX(48px); } }
+@keyframes slide-in-left   { from { opacity: 0; transform: translateX(-48px); } }
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-9px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-6px); }
+    80%      { transform: translateX(4px); }
+}
+
+
+/* =========================================================
+   STEP TEXT
+========================================================= */
+
+.step-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1.1rem;
+    font-size: 1.9rem;
+    line-height: 1;
+    background: radial-gradient(circle at 30% 25%, rgba(47, 140, 255, 0.28), rgba(139, 92, 246, 0.12));
+    border: 1px solid var(--gold-line);
+    border-radius: 50%;
+}
+
+.step-label {
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gold-light);
+}
+
+h1 {
+    margin-bottom: 0.6rem;
+    font-family: var(--display);
+    font-size: clamp(2rem, 6vw, 2.65rem);
+    font-weight: 700;
+    line-height: 1.06;
+    color: #fff;
+}
+
+.description {
+    max-width: 34rem;
+    margin-bottom: 1.6rem;
+    color: var(--muted);
+}
+
+.description strong {
+    color: var(--ink);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   INPUTS (floating labels)
+========================================================= */
+
+.name-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+}
+
+.input-box {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.input-box input {
+    width: 100%;
+    height: 58px;
+    padding: 1.45rem 1rem 0.45rem;
+    font-size: 1.02rem;
+    color: var(--ink);
+    background: var(--field);
+    border: 1.5px solid var(--field-line);
+    border-radius: 14px;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+.input-box input:hover {
+    border-color: rgba(157, 170, 196, 0.5);
+}
+
+.input-box input:focus {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(242, 177, 52, 0.16);
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--muted);
+    transform: translateY(-50%);
+    transform-origin: left center;
+    pointer-events: none;
+    transition: top 0.18s, transform 0.18s, color 0.18s;
+}
+
+/* label floats up when focused or filled */
+.input-box input:focus + label,
+.input-box input:not(:placeholder-shown) + label,
+.date-box label {
+    top: 0.55rem;
+    transform: translateY(0) scale(0.78);
+    color: var(--gold-light);
+}
+
+/* error state */
+.input-box.input-error input {
+    border-color: var(--error);
+    box-shadow: 0 0 0 4px rgba(255, 107, 122, 0.14);
+}
+
+.input-box.input-error input + label {
+    color: var(--error-soft);
+}
+
+/* browser autofill */
+.input-box input:-webkit-autofill {
+    -webkit-text-fill-color: var(--ink);
+    -webkit-box-shadow: 0 0 0 100px #0a1d38 inset;
+    caret-color: var(--ink);
+}
+
+
+/* ----- username ----- */
+
+.username-symbol {
+    position: absolute;
+    top: 1.4rem;
+    left: 1rem;
+    z-index: 1;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--gold);
+    pointer-events: none;
+}
+
+.username-box input {
+    padding-left: 2.15rem;
+}
+
+.username-box label {
+    left: 2.15rem;
+}
+
+
+/* ----- password ----- */
+
+.password-box input {
+    padding-right: 4.8rem;
+}
+
+.show-password {
+    position: absolute;
+    top: 50%;
+    right: 0.55rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: background 0.15s;
+}
+
+.show-password:hover {
+    background: rgba(242, 177, 52, 0.12);
+}
+
+
+/* ----- date ----- */
+
+.date-box input {
+    color-scheme: dark;
+    min-height: 58px;
+}
+
+.date-box input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.8) sepia(1) saturate(3) hue-rotate(5deg);
+}
+
+
+/* ----- validation messages ----- */
+
+.input-message {
+    max-height: 0;
+    margin: 0;
+    overflow: hidden;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--error-soft);
+    opacity: 0;
+    transition: max-height 0.25s, opacity 0.25s, margin 0.25s;
+}
+
+.input-message.show {
+    max-height: 5rem;
+    margin: -0.15rem 0 0.9rem;
+    opacity: 1;
+}
+
+#otpMessage {
+    text-align: center;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.primary-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    width: 100%;
+    min-height: 54px;
+    margin-top: 1.1rem;
+    padding: 0.85rem 1.5rem;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #1a1203;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    border: 2px solid var(--gold);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px -12px rgba(242, 177, 52, 0.75);
+}
+
+.primary-button:active {
+    transform: translateY(0);
+}
+
+.primary-button .arrow {
+    display: inline-block;
+    transition: transform 0.15s;
+}
+
+.primary-button:hover .arrow {
+    transform: translateX(4px);
+}
+
+.primary-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.create-button {
+    min-height: 58px;
+    font-size: 1.08rem;
+    box-shadow: 0 0 0 5px rgba(242, 177, 52, 0.12);
+}
+
+.back-button {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.7rem;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: var(--muted);
+    background: transparent;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+}
+
+.back-button:hover {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+
+/* =========================================================
+   OTP
+========================================================= */
+
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.otp-digit {
+    flex: 1;
+    min-width: 0;
+    max-width: 3.6rem;
+    aspect-ratio: 0.85;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    background: var(--field);
+    border: 1.5px solid var(--field-line);
+    border-radius: 14px;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.otp-digit:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(242, 177, 52, 0.16);
+}
+
+.otp-resend {
+    margin-top: 0.4rem;
+    font-size: 0.93rem;
+    text-align: center;
+    color: var(--muted);
+}
+
+.otp-resend #otpTimer {
+    color: var(--gold-light);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.resend-link {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.resend-link:hover {
+    background: rgba(242, 177, 52, 0.12);
+}
+
+.resend-link:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   PASSWORD STRENGTH
+========================================================= */
+
+.strength {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: -0.2rem 0 1.1rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+}
+
+.strength-bars {
+    display: flex;
+    flex: 1;
+    gap: 6px;
+}
+
+.strength-bars span {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 99px;
+    transition: background 0.25s;
+}
+
+.strength-bars span.filled:nth-child(1) { background: #FF6B7A; }
+.strength-bars span.filled:nth-child(2) { background: #F2B134; }
+.strength-bars span.filled:nth-child(3) { background: #9BD65B; }
+.strength-bars span.filled:nth-child(4) { background: #2FD08B; }
+
+#strengthText {
+    min-width: 8.5rem;
+    text-align: right;
+}
+
+
+/* =========================================================
+   RELATIONSHIP OPTIONS
+========================================================= */
+
+.relationship-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+}
+
+.relationship-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 0.85rem 2.9rem 0.85rem 0.85rem;
+    text-align: left;
+    color: var(--ink);
+    background: var(--field);
+    border: 1.5px solid var(--field-line);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+}
+
+.relationship-option:hover {
+    border-color: rgba(242, 177, 52, 0.6);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.relationship-icon {
+    flex: none;
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.relationship-info {
+    min-width: 0;
+    line-height: 1.3;
+}
+
+.relationship-info strong {
+    display: block;
+    font-size: 0.97rem;
+    font-weight: 600;
+}
+
+.relationship-info small {
+    display: block;
+    margin-top: 0.1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.relationship-check {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a1203;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateY(-50%) scale(0.5);
+    transition: opacity 0.18s, transform 0.18s;
+}
+
+.relationship-option.selected {
+    background: rgba(242, 177, 52, 0.10);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(242, 177, 52, 0.14);
+}
+
+.relationship-option.selected .relationship-check {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+
+/* =========================================================
+   REVIEW STEP
+========================================================= */
+
+.success-icon {
+    display: grid;
+    place-items: center;
+    width: 68px;
+    height: 68px;
+    margin-bottom: 1.1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1203;
+    background: linear-gradient(160deg, var(--gold-light), var(--gold));
+    border-radius: 50%;
+    box-shadow: 0 0 0 8px rgba(242, 177, 52, 0.14), 0 14px 30px -12px rgba(242, 177, 52, 0.6);
+}
+
+.account-preview {
+    margin-bottom: 1.2rem;
+    padding: 0.4rem 1.1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+}
+
+.preview-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.preview-row:last-child {
+    border-bottom: 0;
+}
+
+.preview-row span {
+    flex: none;
+    font-size: 0.92rem;
+    color: var(--muted);
+}
+
+.preview-row strong {
+    min-width: 0;
+    font-weight: 600;
+    text-align: right;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+}
+
+
+/* ----- terms checkbox ----- */
+
+.terms-box {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+    cursor: pointer;
+}
+
+.terms-box input {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    margin-top: 0.1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: transparent;
+    background: var(--field);
+    border: 1.5px solid var(--field-line);
+    border-radius: 7px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.terms-box input:checked + .checkmark {
+    color: #1a1203;
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.terms-box input:focus-visible + .checkmark {
+    outline: 3px solid var(--cyan);
+    outline-offset: 3px;
+}
+
+.terms-text {
+    font-size: 0.93rem;
+    color: var(--muted);
+}
+
+.terms-text a {
+    color: var(--gold-light);
+    text-underline-offset: 3px;
+}
+
+.terms-text a:hover {
+    color: #fff;
+}
+
+
+/* =========================================================
+   LOGIN LINK
+========================================================= */
+
+.login-link {
+    margin-top: 1.2rem;
+    padding-top: 1.1rem;
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--muted);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.login-link a {
+    margin-left: 0.3rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 560px) {
+
+    .signup-body {
+        padding: 0.6rem;
+    }
+
+    .signup-container {
+        padding: 1.2rem 1.1rem 1.1rem;
+        border-radius: 22px;
+    }
+
+    .brand {
+        font-size: 1.5rem;
+    }
+
+    .brand::before {
+        width: 34px;
+        height: 34px;
+    }
+
+    .progress-area {
+        max-width: 140px;
+    }
+
+    .description {
+        margin-bottom: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .name-grid,
+    .relationship-options {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .relationship-options {
+        gap: 0.6rem;
+    }
+
+    .otp-inputs {
+        gap: 0.4rem;
+    }
+
+    .otp-digit {
+        font-size: 1.45rem;
+    }
+
+    #strengthText {
+        min-width: 7.2rem;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@keyframes grapsy-page-enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes grapsy-panel-enter {
+    from { opacity: 0; transform: translateY(14px) scale(0.99); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.signup-body > main {
+    animation: grapsy-page-enter 0.5s ease-out both;
+}
+
+.login-intro {
+    animation: grapsy-panel-enter 0.6s 0.04s ease-out both;
+}
+
+.login-card {
+    animation: grapsy-panel-enter 0.6s 0.12s ease-out both;
+}
+
+.profile-grid > * {
+    animation: grapsy-panel-enter 0.5s ease-out both;
+}
+
+.profile-grid > :nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.profile-card {
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.profile-card:hover {
+    border-color: rgba(242, 177, 52, 0.48);
+    box-shadow: 0 28px 66px -38px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.path-list li,
+.nav-link,
+.logout-button,
+.outline-button {
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.progress-stat:hover,
+.path-list li:hover {
+    transform: translateY(-2px);
+    border-color: rgba(242, 177, 52, 0.45);
+}
+
+.nav-link:hover,
+.outline-button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(242, 177, 52, 0.65);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.logout-button:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 107, 122, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .gradient-orb {
+        animation: none;
+    }
+
+    .step.exit-left,
+    .step.exit-right,
+    .step.enter-left,
+    .step.enter-right,
+    .step.shake {
+        animation-duration: 0.01s;
+    }
+
+    .progress-bar,
+    .primary-button,
+    .input-box input,
+    .input-box label {
+        transition-duration: 0.01s;
+    }
+
+    .primary-button:hover {
+        transform: none;
+    }
+}

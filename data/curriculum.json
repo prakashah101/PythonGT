@@ -1,0 +1,19 @@
+{
+  "subject": "Python",
+  "teaching_mode": "AI-generated lessons and coding challenges",
+  "progression_rule": "Teach in order. Move forward when the learner demonstrates understanding. Re-teach and generate a new practice challenge when needed.",
+  "topics": [
+    {"id":"variables","name":"Variables and values","level":"Beginner","prerequisites":[]},
+    {"id":"conditions","name":"Conditions and branching","level":"Beginner","prerequisites":["variables"]},
+    {"id":"loops","name":"Loops and repetition","level":"Beginner","prerequisites":["conditions"]},
+    {"id":"functions","name":"Functions and parameters","level":"Basic","prerequisites":["variables","conditions"]},
+    {"id":"lists","name":"Lists and iteration","level":"Basic","prerequisites":["loops"]},
+    {"id":"dictionaries","name":"Dictionaries","level":"Intermediate","prerequisites":["lists"]},
+    {"id":"tuples_sets","name":"Tuples and sets","level":"Intermediate","prerequisites":["lists","dictionaries"]},
+    {"id":"exceptions_files","name":"Exceptions and files","level":"Intermediate","prerequisites":["functions","dictionaries"]},
+    {"id":"comprehensions","name":"Comprehensions","level":"Intermediate","prerequisites":["loops","lists"]},
+    {"id":"oop","name":"Object-oriented programming","level":"Advanced","prerequisites":["functions","dictionaries"]},
+    {"id":"iterators_generators","name":"Iterators and generators","level":"Advanced","prerequisites":["functions","loops"]},
+    {"id":"testing_apis","name":"Testing and APIs","level":"Professional","prerequisites":["functions","exceptions_files"]}
+  ]
+}

@@ -1,0 +1,65 @@
+/* Shared animated snake artwork for Grapsy pages outside the coding dashboard. */
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  isolation: isolate;
+  background: #020817 !important;
+}
+
+body::before {
+  position: fixed !important;
+  z-index: -1 !important;
+  inset: -4% !important;
+  display: block !important;
+  content: "" !important;
+  pointer-events: none !important;
+  opacity: .76 !important;
+  background-image: url("/static/img/python-snake-background.png") !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  animation: shared-snake-drift 30s cubic-bezier(.45,0,.55,1) infinite alternate;
+  will-change: transform;
+}
+
+body::after {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 42%, transparent 24%, #02081745 100%),
+    linear-gradient(180deg, #02081735, #04112722 48%, #02081772);
+}
+
+.background {
+  display: none !important;
+}
+
+.how,
+.levels,
+footer {
+  background: rgba(1, 7, 19, .58) !important;
+}
+
+.final {
+  background: radial-gradient(ellipse 60% 100% at 50% 100%, rgba(139, 92, 246, .16), transparent 70%) !important;
+}
+
+@keyframes shared-snake-drift {
+  0% { transform: scale(1.1) translate3d(-.8%, .2%, 0); }
+  50% { transform: scale(1.1) translate3d(.3%, -.3%, 0); }
+  100% { transform: scale(1.1) translate3d(.8%, .2%, 0); }
+}
+
+@media (max-width: 700px) {
+  body::before { opacity: .55 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; transform: none !important; }
+}

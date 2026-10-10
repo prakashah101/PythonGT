@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile and account | Grapsy</title>
+  <link rel="stylesheet" href="/static/css/signup.css">
+  <style>
+    .profile-page { position:relative; z-index:1; width:min(1120px,100%); margin:auto; padding:26px 0 48px; }
+    .profile-topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:24px; }
+    .profile-topbar .brand { text-decoration:none; }
+    .profile-nav { display:flex; gap:10px; align-items:center; }
+    .nav-link,.logout-button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:9px 15px; border:1px solid var(--field-line); border-radius:999px; background:#ffffff08; color:var(--ink); text-decoration:none; font:700 13px var(--body); cursor:pointer; }
+    .logout-button { border-color:#a3495566; color:#ffb4ad; }
+    .profile-title { margin:8px 0 22px; }
+    .profile-title h1 { margin:8px 0; font-size:clamp(2rem,4vw,3rem); }
+    .profile-title p { color:var(--muted); }
+    .profile-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(300px,.8fr); gap:20px; align-items:start; }
+    .profile-card { padding:26px; background:rgba(5,17,34,.84); border:1px solid var(--gold-line); border-radius:20px; box-shadow:0 24px 60px -35px #000d; }
+    .profile-card h2 { margin:0 0 6px; font:700 1.45rem var(--body); color:#fff; }
+    .card-description { margin:0 0 20px; color:var(--muted); font-size:13px; }
+    .identity { display:flex; align-items:center; gap:16px; padding:0 0 20px; margin-bottom:22px; border-bottom:1px solid #ffffff14; }
+    .profile-avatar { width:76px; height:76px; display:grid; place-items:center; flex:none; overflow:hidden; border-radius:50%; border:2px solid var(--gold); background:#f2b134; color:#171106; font-size:28px; font-weight:800; }
+    .profile-avatar img { width:100%; height:100%; object-fit:cover; }
+    .identity-copy strong { display:block; font-size:18px; color:#fff; }
+    .identity-copy span { display:block; color:var(--muted); font-size:13px; }
+    .outline-button { margin-top:8px; padding:7px 10px; border:1px solid var(--field-line); border-radius:8px; background:#ffffff0a; color:var(--ink); font:700 12px var(--body); cursor:pointer; }
+    .profile-fields { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+    .profile-fields .input-box { margin-bottom:14px; }
+    .input-box input:disabled { opacity:.7; cursor:not-allowed; }
+    .readonly-note { margin:-3px 0 14px; color:#8393aa; font-size:11px; }
+    .profile-card .primary-button { margin-top:4px; }
+    .form-message { min-height:21px; margin:5px 0 0; color:var(--muted); font-size:13px; }
+    .form-message.error { color:var(--error-soft); }
+    .form-message.success { color:#8ce0a7; }
+    .accessibility-options { display:grid; gap:13px; }
+    .accessibility-option { display:flex; align-items:center; justify-content:space-between; gap:14px; color:var(--ink); font-size:13px; }
+    .accessibility-option select { min-width:145px; min-height:40px; padding:7px 10px; border:1px solid var(--field-line); border-radius:9px; background:#071426; color:var(--ink); font:13px var(--body); }
+    .accessibility-option input { width:19px; height:19px; accent-color:var(--gold); }
+    .danger-zone { border-color:#9c465888; }
+    .danger-zone h2 { color:#ffb4ad; }
+    .danger-button { margin-top:6px; min-height:44px; padding:10px 14px; border:1px solid #c45564; border-radius:10px; background:#401c27; color:#ffe3e5; font:700 13px var(--body); cursor:pointer; }
+    .danger-button:hover { background:#5a2532; }
+    .danger-button:disabled { opacity:.6; cursor:wait; }
+    .side-stack { display:grid; gap:20px; }
+    .progress-summary { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:16px 0; }
+    .progress-stat { padding:13px; border:1px solid #ffffff16; border-radius:12px; background:#ffffff06; }
+    .progress-stat strong { display:block; color:var(--gold-light); font-size:20px; overflow-wrap:anywhere; }
+    .progress-stat span { color:var(--muted); font-size:11px; }
+    .path-list { display:grid; gap:7px; margin:12px 0 0; list-style:none; }
+    .path-list li { display:flex; justify-content:space-between; gap:8px; padding:8px 10px; border:1px solid #ffffff12; border-radius:9px; color:#dce8f5; font-size:12px; }
+    .path-list li.active { border-color:#b5812c; background:#f2b13412; }
+    .path-list li[data-topic-status="mastered"] { border-color:#367452; background:#10251f; }
+    .path-list li[data-topic-status="in_progress"] { border-color:#4e7198; background:#12243a; }
+    .path-list small { color:var(--muted); white-space:nowrap; }
+    .learning-history { margin-top:20px; }
+    .history-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+    .history-count { flex:none; padding:6px 10px; border:1px solid var(--gold-line); border-radius:999px; color:var(--gold-light); font-size:12px; font-weight:800; }
+    .record-list { display:grid; gap:10px; }
+    .history-filters { display:grid; grid-template-columns:minmax(180px,1fr) repeat(3,minmax(140px,.55fr)); gap:10px; margin:16px 0 8px; }
+    .history-filters label { display:grid; gap:5px; color:var(--muted); font-size:11px; font-weight:700; }
+    .history-filters input,.history-filters select { width:100%; min-height:40px; padding:8px 10px; border:1px solid var(--field-line); border-radius:9px; background:#071426; color:var(--ink); font:13px var(--body); }
+    .history-filters input:focus,.history-filters select:focus { outline:2px solid var(--blue); outline-offset:1px; }
+    .filter-status { min-height:20px; margin:4px 0 10px; color:var(--muted); font-size:12px; }
+    .learning-record { overflow:hidden; border:1px solid #ffffff17; border-radius:13px; background:#071426a8; transition:border-color .2s,background .2s; }
+    .learning-record:hover,.learning-record[open] { border-color:#f2b13475; background:#0a192c; }
+    .record-summary { display:grid; grid-template-columns:100px minmax(0,1fr) auto 14px; align-items:center; gap:12px; padding:13px 15px; cursor:pointer; list-style:none; }
+    .record-summary::-webkit-details-marker { display:none; }
+    .record-summary::after { content:"⌄"; color:var(--gold-light); font-size:18px; transition:transform .2s; }
+    .learning-record[open] .record-summary::after { transform:rotate(180deg); }
+    .record-result { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+    .record-result.correct { color:#8ce0a7; }.record-result.partial { color:#ffd078; }.record-result.incorrect { color:#ff9aa5; }
+    .record-question-preview { overflow:hidden; color:#eaf0fa; font-size:13px; text-overflow:ellipsis; white-space:nowrap; }
+    .record-score { color:var(--gold-light); font:700 13px var(--body); white-space:nowrap; }
+    .record-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; color:#8c9bb1; font-size:11px; }
+    .record-body { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0 15px 16px; }
+    .record-body h3 { margin:0 0 6px; color:var(--gold-light); font-size:11px; letter-spacing:.07em; text-transform:uppercase; }
+    .record-body p,.record-code { margin:0; color:#d3ddec; font:13px/1.65 var(--body); white-space:pre-wrap; overflow-wrap:anywhere; }
+    .record-code { max-height:310px; overflow:auto; padding:11px; border:1px solid #ffffff12; border-radius:9px; background:#030a13; font-family:ui-monospace,Consolas,monospace; }
+    .record-feedback { grid-column:1/-1; }
+    .history-empty { padding:24px 16px; border:1px dashed #ffffff2c; border-radius:12px; color:var(--muted); text-align:center; font-size:13px; }
+    .email-value { overflow-wrap:anywhere; color:#fff; }
+    @media(max-width:820px) { .profile-grid { grid-template-columns:1fr; } .profile-page { padding:18px 0 30px; } .history-filters { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:540px) { .signup-body { padding:.65rem; } .profile-topbar { align-items:flex-start; } .profile-nav { gap:6px; } .nav-link,.logout-button { padding:8px 11px; font-size:12px; } .profile-card { padding:20px 17px; } .profile-fields { grid-template-columns:1fr; } .record-summary { display:flex; flex-wrap:wrap; gap:7px; padding:12px; } .record-summary > span:nth-child(2) { order:3; flex:1 1 100%; } .record-score { order:2; margin-left:auto; } .record-question-preview { white-space:normal; } .record-summary::after { order:4; margin-left:auto; } .record-meta { gap:6px; } .record-body { grid-template-columns:1fr; padding:0 12px 14px; } .record-feedback { grid-column:auto; } .history-filters { grid-template-columns:1fr; } }
+  </style>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+</head>
+<body class="signup-body">
+  <div class="background"><div class="gradient-orb orb-1"></div><div class="gradient-orb orb-2"></div><div class="gradient-orb orb-3"></div></div>
+  <main class="profile-page">
+    <header class="profile-topbar">
+      <a href="/dashboard" class="brand" aria-label="Grapsy dashboard">Grapsy</a>
+      <nav class="profile-nav" aria-label="Account navigation">
+        <a class="nav-link" href="/dashboard">Dashboard</a>
+        <form method="post" action="/logout"><button class="logout-button" type="submit">Log out</button></form>
+      </nav>
+    </header>
+    <div class="profile-title">
+      <span class="intro-kicker">Your account</span>
+      <h1>Profile and progress</h1>
+      <p>Update your details, manage account security, and see how your Python practice is going.</p>
+    </div>
+    <div class="profile-grid">
+      <div class="side-stack">
+        <section class="profile-card">
+          <div class="identity">
+            <div class="profile-avatar" id="profile-avatar">{% if user.profile_picture_url %}<img src="{{ user.profile_picture_url }}" alt="Profile picture">{% else %}{{ user.username[:1] | upper }}{% endif %}</div>
+            <div class="identity-copy"><strong id="identity-name">{{ user.first_name }} {{ user.last_name }}</strong><span id="identity-username">@{{ user.username }}</span><button class="outline-button" id="select-picture" type="button">Upload profile picture</button></div>
+          </div>
+          <input type="file" id="picture-input" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+          <p class="form-message" id="picture-message" role="status" aria-live="polite"></p>
+          <h2>Personal details</h2>
+          <p class="card-description">Your email is used to sign in. Changing it requires email verification.</p>
+          <form id="profile-form">
+            <div class="profile-fields">
+              <div class="input-box"><input id="first-name" name="first_name" value="{{ user.first_name }}" maxlength="100" placeholder=" " required><label for="first-name">First name</label></div>
+              <div class="input-box"><input id="last-name" name="last_name" value="{{ user.last_name }}" maxlength="100" placeholder=" " required><label for="last-name">Last name</label></div>
+              <div class="input-box"><input id="username" name="username" value="{{ user.username }}" minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+" placeholder=" " required><label for="username">Username</label></div>
+              <div class="input-box"><input id="phone" name="phone" value="{{ user.phone }}" maxlength="30" placeholder=" " type="tel"><label for="phone">Phone</label></div>
+              <div class="input-box"><input id="date-of-birth" name="date_of_birth" value="{{ user.date_of_birth or '' }}" placeholder=" " type="date"><label for="date-of-birth">Date of birth</label></div>
+              <div class="input-box"><input id="relationship" name="relationship_status" value="{{ user.relationship_status or '' }}" maxlength="50" placeholder=" "><label for="relationship">Relationship status</label></div>
+              <div class="input-box"><input id="location" name="location" value="{{ user.location or '' }}" maxlength="100" placeholder=" "><label for="location">Location</label></div>
+              <div class="input-box"><input id="email" value="{{ user.email }}" placeholder=" " disabled><label for="email">Email address</label></div>
+            </div>
+            <p class="readonly-note">Email address changes are not available until email verification is added.</p>
+            <p class="form-message" id="profile-message" role="status" aria-live="polite"></p>
+            <button class="primary-button" type="submit"><span>Save profile changes</span><span class="arrow">→</span></button>
+          </form>
+        </section>
+        <section class="profile-card">
+          <h2>{% if user.auth_provider == 'password' %}Change password{% else %}Set a password{% endif %}</h2>
+          <p class="card-description">{% if user.auth_provider == 'password' %}Use your current password to set a new one.{% else %}You signed in with a social account. Set a password here to enable password-confirmed account deletion and future password sign-in.{% endif %}</p>
+          <form id="password-form">
+            {% if user.auth_provider == 'password' %}<div class="input-box"><input type="password" id="current-password" name="current_password" autocomplete="current-password" placeholder=" " required><label for="current-password">Current password</label></div>{% else %}<input type="hidden" name="current_password" value="">{% endif %}
+            <div class="profile-fields">
+              <div class="input-box"><input type="password" id="new-password" name="new_password" minlength="8" autocomplete="new-password" placeholder=" " required><label for="new-password">New password</label></div>
+              <div class="input-box"><input type="password" id="confirm-password" name="confirm_password" minlength="8" autocomplete="new-password" placeholder=" " required><label for="confirm-password">Confirm new password</label></div>
+            </div>
+            <p class="form-message" id="password-message" role="status" aria-live="polite"></p>
+            <button class="primary-button" type="submit"><span>{% if user.auth_provider == 'password' %}Update password{% else %}Set password{% endif %}</span><span class="arrow">→</span></button>
+          </form>
+        </section>
+        <section class="profile-card" aria-labelledby="accessibility-title">
+          <h2 id="accessibility-title">Accessibility</h2>
+          <p class="card-description">These display preferences are saved on this device and used across Grapsy pages.</p>
+          <div class="accessibility-options">
+            <label class="accessibility-option" for="accessibility-text-size"><span>Text size</span><select id="accessibility-text-size"><option value="normal">Default</option><option value="large">Large</option><option value="larger">Larger</option></select></label>
+            <label class="accessibility-option" for="accessibility-contrast"><span>Higher contrast</span><input id="accessibility-contrast" type="checkbox"></label>
+            <label class="accessibility-option" for="accessibility-motion"><span>Reduce animations</span><input id="accessibility-motion" type="checkbox"></label>
+          </div>
+        </section>
+        <section class="profile-card danger-zone" aria-labelledby="delete-account-title">
+          <h2 id="delete-account-title">Delete account</h2>
+          <p class="card-description">Permanently delete your account, profile details, feedback, profile picture, and saved practice history. This cannot be undone.</p>
+          <form id="delete-account-form">
+            <input type="hidden" name="csrf_token" value="{{ account_action_csrf }}">
+            <div class="input-box"><input type="password" id="delete-account-password" name="current_password" placeholder=" " required autocomplete="current-password"><label for="delete-account-password">Current password</label></div>
+            <div class="input-box"><input id="delete-account-confirmation" name="confirmation" placeholder=" " required autocomplete="off"><label for="delete-account-confirmation">Type {{ user.username }} to confirm</label></div>
+            <p class="form-message" id="delete-account-message" role="status" aria-live="polite"></p>
+            <button class="danger-button" type="submit">Delete my account permanently</button>
+          </form>
+        </section>
+      </div>
+      <aside class="profile-card" aria-label="Learning progress">
+        <span class="intro-kicker">Learning report</span>
+        <h2 style="margin-top:8px">Python progress</h2>
+        <p class="card-description">Your solved-question history is saved to your Grapsy account. Accuracy uses 100% for correct, 50% for partial, and 0% for incorrect reviews.</p>
+        <div class="progress-summary">
+          <div class="progress-stat"><strong id="progress-level">—</strong><span>Starting level</span></div>
+          <div class="progress-stat"><strong id="progress-submissions">0</strong><span>Code submissions</span></div>
+          <div class="progress-stat"><strong id="progress-result">—</strong><span>Latest AI review</span></div>
+          <div class="progress-stat"><strong id="progress-topics">0 / {{ course_path.topics | length }}</strong><span>Topics mastered</span></div>
+          <div class="progress-stat"><strong>{{ followers_count }}</strong><span>Followers</span></div>
+          <div class="progress-stat"><strong>{{ following_count }}</strong><span>Following</span></div>
+        </div>
+        <a class="nav-link" href="/projects#community">Explore Grapsy community →</a>
+        <h3 style="margin:20px 0 0;font-size:14px">Course path</h3>
+        <p class="card-description" style="margin:4px 0 0;font-size:11px">Two consecutive correct reviews mark a topic mastered.</p>
+        <ul class="path-list" id="course-path">
+          {% for topic in course_path.topics %}<li data-level="{{ topic.level }}" data-topic-id="{{ topic.id }}"><span>{{ topic.name }}</span><small>{{ topic.level }}</small></li>{% endfor %}
+        </ul>
+      </aside>
+    </div>
+    <section class="profile-card learning-history" aria-labelledby="learning-history-title">
+      <div class="history-heading">
+        <div><span class="intro-kicker">Saved practice</span><h2 id="learning-history-title" style="margin-top:8px">Solved questions</h2><p class="card-description">Each record contains the question, your submitted answer, whether you used a hint, and your accuracy.</p></div>
+        <span class="history-count">{{ learning_records | length }} record{% if learning_records | length != 1 %}s{% endif %}</span>
+      </div>
+      <div class="history-filters" aria-label="Filter solved questions">
+        <label for="history-search">Search questions and answers<input id="history-search" type="search" placeholder="Search saved practice" autocomplete="off"></label>
+        <label for="history-result-filter">Review result<select id="history-result-filter"><option value="">All results</option><option value="CORRECT">Correct</option><option value="PARTIAL">Partial</option><option value="INCORRECT">Incorrect</option></select></label>
+        <label for="history-hint-filter">Hint used<select id="history-hint-filter"><option value="">Any</option><option value="true">Yes</option><option value="false">No</option></select></label>
+        <label for="history-topic-filter">Topic<select id="history-topic-filter"><option value="">All topics</option><option value="__unassigned">Unassigned topic</option>{% for topic in course_path.topics %}<option value="{{ topic.id }}">{{ topic.name }}</option>{% endfor %}</select></label>
+      </div>
+      <p class="filter-status" id="history-filter-status" role="status" aria-live="polite"></p>
+      {% if learning_records %}
+      <div class="record-list" id="record-list">
+        {% for record in learning_records %}
+        <details class="learning-record" data-result="{{ record.result }}" data-hint="{{ 'true' if record.hint_used else 'false' }}" data-topic="{{ record.topic_id or '__unassigned' }}">
+          <summary class="record-summary">
+            {% set nepal_time = record.created_at.replace(tzinfo=timezone.utc).astimezone(nepal_timezone) %}
+            <span><span class="record-question-preview">{{ record.question | replace("\n", " ") }}</span><span class="record-meta"><time datetime="{{ nepal_time.isoformat() }}">{{ nepal_time.strftime("%b %d, %Y · %H:%M Nepal Time") }}</time><span>Hint used: {{ "Yes" if record.hint_used else "No" }}</span></span></span>
+            <span class="record-score">Accuracy {{ record.accuracy_score }}%</span>
+          </summary>
+          <div class="record-body">
+            <section><h3>Question</h3><p>{{ record.question }}</p></section>
+            <section><h3>Your submitted answer</h3><pre class="record-code">{{ record.submitted_answer }}</pre></section>
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+      <div class="history-empty" id="history-no-matches" hidden>No saved answers match those filters.</div>
+      {% else %}<div class="history-empty">No solved questions have been recorded yet. Start a lesson and submit your first answer.</div>{% endif %}
+    </section>
+  </main>
+  {% include "legal_footer.html" %}
+  <script>
+    const currentUsername = {{ user.username | tojson }};
+    const progressKey = `grapsy-progress:${currentUsername}`;
+    let progress = {};
+    try { progress = JSON.parse(localStorage.getItem(progressKey) || "{}"); } catch (_) {}
+    function renderLearningProgress() {
+      document.getElementById("progress-level").textContent = progress.level || "—";
+      document.getElementById("progress-submissions").textContent = String(progress.submissions || 0);
+      document.getElementById("progress-result").textContent = progress.lastResult || "—";
+      document.querySelectorAll("#course-path li").forEach(item => {
+        const active = Boolean(progress.level) && item.dataset.level === progress.level;
+        if (!item.dataset.topicStatus) item.classList.toggle("active", active);
+        const badge = item.querySelector("small");
+        if (!item.dataset.topicStatus) badge.textContent = active ? `${item.dataset.level} · starting level` : item.dataset.level;
+      });
+    }
+    async function loadTopicProgress() {
+      try {
+        const response = await fetch("/api/topic-progress");
+        if (!response.ok) return;
+        const data = await response.json();
+        if (!data.ok) return;
+        const labels = {mastered:"Mastered", in_progress:"In progress", next:"Up next", upcoming:"Upcoming", foundation:"Foundation"};
+        const byId = new Map(data.topics.map(topic => [topic.id, topic]));
+        document.querySelectorAll("#course-path li[data-topic-id]").forEach(item => {
+          const topic = byId.get(item.dataset.topicId);
+          if (!topic) return;
+          item.dataset.topicStatus = topic.status;
+          item.classList.toggle("active", topic.status === "next" || topic.status === "in_progress");
+          item.querySelector("small").textContent = labels[topic.status] || topic.status;
+        });
+        document.getElementById("progress-topics").textContent = `${data.mastered} / ${data.total}`;
+      } catch (_) {}
+    }
+    renderLearningProgress();
+    loadTopicProgress();
+    const historyRecords = [...document.querySelectorAll(".learning-record")];
+    const historyStatus = document.getElementById("history-filter-status");
+    function filterLearningHistory() {
+      const query = document.getElementById("history-search").value.trim().toLowerCase();
+      const result = document.getElementById("history-result-filter").value;
+      const hint = document.getElementById("history-hint-filter").value;
+      const topic = document.getElementById("history-topic-filter").value;
+      let visible = 0;
+      historyRecords.forEach(record => {
+        const matches = (!result || record.dataset.result === result)
+          && (!hint || record.dataset.hint === hint)
+          && (!topic || record.dataset.topic === topic)
+          && (!query || record.textContent.toLowerCase().includes(query));
+        record.hidden = !matches;
+        if (matches) visible += 1;
+      });
+      if (historyStatus) historyStatus.textContent = `Showing ${visible} of ${historyRecords.length} saved answer${historyRecords.length === 1 ? "" : "s"}.`;
+      const noMatches = document.getElementById("history-no-matches");
+      if (noMatches) noMatches.hidden = visible > 0;
+    }
+    ["history-search", "history-result-filter", "history-hint-filter", "history-topic-filter"].forEach(id => {
+      document.getElementById(id).addEventListener("input", filterLearningHistory);
+      document.getElementById(id).addEventListener("change", filterLearningHistory);
+    });
+    filterLearningHistory();
+    fetch("/api/profile/progress").then(response => response.ok ? response.json() : null).then(saved => {
+      if (!saved) return;
+      progress = {
+        level: progress.level || saved.level || "",
+        submissions: Math.max(Number(progress.submissions || 0), Number(saved.submissions || 0)),
+        lastResult: progress.lastResult || saved.last_result || ""
+      };
+      localStorage.setItem(progressKey, JSON.stringify(progress));
+      renderLearningProgress();
+    }).catch(() => {});
+
+    const pictureInput = document.getElementById("picture-input");
+    document.getElementById("select-picture").addEventListener("click", () => pictureInput.click());
+    pictureInput.addEventListener("change", async () => {
+      const picture = pictureInput.files[0];
+      if (!picture) return;
+      const message = document.getElementById("picture-message");
+      message.className = "form-message";
+      message.textContent = "Uploading picture…";
+      const body = new FormData(); body.append("picture", picture);
+      try {
+        const response = await fetch("/api/profile-picture", {method:"POST", body});
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not upload picture.");
+        const image = document.createElement("img"); image.src = result.profile_picture_url; image.alt = "Profile picture";
+        document.getElementById("profile-avatar").replaceChildren(image);
+        message.classList.add("success"); message.textContent = "Profile picture updated.";
+      } catch (error) { message.classList.add("error"); message.textContent = error.message; }
+      finally { pictureInput.value = ""; }
+    });
+
+    document.getElementById("profile-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const message = document.getElementById("profile-message");
+      message.className = "form-message"; message.textContent = "Saving…";
+      try {
+        const response = await fetch("/api/profile/update", {method:"POST", body:new FormData(event.currentTarget)});
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not save profile.");
+        const newUsername = result.username;
+        if (newUsername !== currentUsername) {
+          const stored = localStorage.getItem(progressKey);
+          if (stored) localStorage.setItem(`grapsy-progress:${newUsername}`, stored);
+        }
+        document.getElementById("identity-name").textContent = `${document.getElementById("first-name").value.trim()} ${document.getElementById("last-name").value.trim()}`;
+        document.getElementById("identity-username").textContent = `@${newUsername}`;
+        message.classList.add("success"); message.textContent = "Profile changes saved.";
+      } catch (error) { message.classList.add("error"); message.textContent = error.message; }
+    });
+
+    document.getElementById("password-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const message = document.getElementById("password-message");
+      message.className = "form-message"; message.textContent = "Updating…";
+      try {
+        const response = await fetch("/api/profile/password", {method:"POST", body:new FormData(event.currentTarget)});
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not change password.");
+        event.currentTarget.reset();
+        message.classList.add("success"); message.textContent = result.message;
+      } catch (error) { message.classList.add("error"); message.textContent = error.message; }
+    });
+
+    document.getElementById("delete-account-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!window.confirm("Permanently delete your Grapsy account and saved data? This cannot be undone.")) return;
+      const form = event.currentTarget;
+      const button = form.querySelector("button[type='submit']");
+      const message = document.getElementById("delete-account-message");
+      button.disabled = true;
+      message.className = "form-message";
+      message.textContent = "Deleting your account…";
+      try {
+        const response = await fetch("/api/account/delete", {method:"POST", body:new FormData(form)});
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || "Could not delete your account.");
+        localStorage.removeItem(progressKey);
+        location.assign(result.redirect || "/");
+      } catch (error) {
+        message.classList.add("error");
+        message.textContent = error.message || "Could not delete your account.";
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

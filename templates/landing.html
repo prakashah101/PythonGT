@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#020c18">
+  <title>Grapsy: Learn Python with a teacher that adapts to you</title>
+  <meta name="description" content="Grapsy finds what you haven't mastered yet, teaches it, and adapts after every answer. Learn. Build. Grow.">
+  <link rel="icon" href="/static/img/logo-badge.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020c18;
+      --bg-deep: #010713;
+      --panel: #07162b;
+      --panel-2: #0a1d38;
+      --ink: #EAF0FA;
+      --muted: #9DAAC4;
+      --gold: #F2B134;
+      --gold-light: #FFD772;
+      --gold-line: rgba(242, 177, 52, 0.35);
+      --blue: #2F8CFF;
+      --cyan: #29B6FF;
+      --violet: #8B5CF6;
+
+      --display: "Cormorant Garamond", "Georgia", "Times New Roman", serif;
+      --body: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 80px; }
+
+    body {
+      font-family: var(--body);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .wrap { width: min(1160px, 100% - 2.5rem); margin-inline: auto; }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(2, 12, 24, 0.82);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gold-line);
+    }
+    .site-header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 0.7rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; }
+    .brand img { width: 46px; height: 46px; border-radius: 50%; }
+    .brand span {
+      font-family: var(--display);
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+    }
+    .nav { display: flex; align-items: center; gap: 0.4rem; }
+    .nav a {
+      text-decoration: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.97rem;
+      color: var(--muted);
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav a:hover { color: var(--ink); background: rgba(255, 255, 255, 0.06); }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-block;
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      text-align: center;
+      padding: 0.85rem 1.6rem;
+      border-radius: 999px;
+      border: 2px solid var(--gold);
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #1a1203;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -10px rgba(242, 177, 52, 0.7); }
+    .btn.ghost { background: transparent; color: var(--gold-light); }
+    .btn.ghost:hover { background: rgba(242, 177, 52, 0.1); box-shadow: none; }
+    .nav .btn { padding: 0.5rem 1.2rem; color: #1a1203; }
+    .nav .btn:hover { color: #1a1203; background: linear-gradient(180deg, var(--gold-light), var(--gold)); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 4.5rem 0 5.5rem;
+      background:
+        radial-gradient(ellipse 60% 70% at 78% 40%, rgba(47, 140, 255, 0.18), transparent 70%),
+        radial-gradient(ellipse 40% 50% at 92% 70%, rgba(139, 92, 246, 0.16), transparent 70%),
+        var(--bg);
+    }
+    .hero .wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .tagline {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--gold-light);
+      padding: 0.35rem 1rem;
+      border: 1px solid var(--gold-line);
+      border-radius: 999px;
+      margin-bottom: 1.4rem;
+    }
+    h1 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(2.8rem, 6.4vw, 5rem);
+      line-height: 1.02;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.3rem;
+      color: #fff;
+    }
+    .lede { font-size: 1.18rem; color: var(--muted); max-width: 35rem; margin-bottom: 2.2rem; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+
+    .hero-logo { position: relative; display: flex; justify-content: center; align-items: center; }
+    .hero-logo::before {
+      content: "";
+      position: absolute;
+      width: 135%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47, 140, 255, 0.34) 0%, rgba(139, 92, 246, 0.2) 38%, transparent 66%);
+      pointer-events: none;
+    }
+
+    /* ---------- Animated logo (the real logo image + motion layers) ---------- */
+    .hero-logo::before { animation: breathe 5s ease-in-out infinite; }
+    .logo-live { position: relative; width: min(460px, 100%); aspect-ratio: 1; }
+    .logo-stage { position: relative; width: 100%; height: 100%; animation: intro 1.4s cubic-bezier(.2, .7, .2, 1) both, floaty 7s 1.4s ease-in-out infinite; }
+    .logo-img { width: 100%; height: 100%; border-radius: 50%; filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.55)); }
+    .logo-fx { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: screen; pointer-events: none; overflow: visible; }
+
+    .logo-fx .ping, .logo-fx .spark, .logo-fx .ripple { transform-box: fill-box; transform-origin: center; }
+    .logo-fx .ping { opacity: 0; animation: ping 3s ease-out infinite; animation-delay: calc(1.6s + var(--i) * 0.3s); }
+    .logo-fx .code-glow { animation: codeglow 3.2s ease-in-out infinite; }
+    .logo-fx .sweep { animation: sweep 6.5s 1.8s ease-in-out infinite; transform: translateX(-300px); }
+    .logo-fx .ripple { opacity: 0; animation: ripple 9s 0.3s ease-out infinite; }
+    .logo-fx .orbit { transform-box: view-box; transform-origin: 450px 450px; animation: spin 8s linear infinite; }
+    .logo-fx .orbit-b { animation-duration: 13s; animation-direction: reverse; opacity: 0.8; }
+    .logo-fx .spark { opacity: 0; animation: twinkle 3.6s ease-in-out infinite; animation-delay: calc(2s + var(--d)); }
+
+    @keyframes intro   { from { opacity: 0; transform: scale(0.82); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+    @keyframes floaty  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes breathe { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.07); } }
+    @keyframes ping    { 0% { transform: scale(0.8); opacity: 0.7; } 65%, 100% { transform: scale(2.6); opacity: 0; } }
+    @keyframes codeglow { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+    @keyframes sweep   { 0% { transform: translateX(-300px); } 45%, 100% { transform: translateX(1100px); } }
+    @keyframes ripple  { 0% { transform: scale(0.15); opacity: 0.9; } 14% { transform: scale(1.03); opacity: 0; } 100% { transform: scale(1.03); opacity: 0; } }
+    @keyframes spin    { to { transform: rotate(360deg); } }
+    @keyframes twinkle { 0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; } 45% { transform: scale(1.25) rotate(45deg); opacity: 1; } 70% { transform: scale(0.4) rotate(90deg); opacity: 0.4; } }
+
+    /* ---------- Sections ---------- */
+    section { padding: 5rem 0; }
+    .section-head { margin-bottom: 3rem; }
+    .section-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.08;
+      color: #fff;
+      max-width: 36rem;
+      margin-bottom: 0.8rem;
+    }
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 64px;
+      height: 3px;
+      margin-top: 1rem;
+      background: linear-gradient(90deg, var(--gold), var(--violet));
+      border-radius: 3px;
+    }
+    .section-intro { color: var(--muted); max-width: 38rem; }
+
+    /* How it works */
+    .how { background: var(--bg-deep); border-block: 1px solid rgba(255, 255, 255, 0.06); }
+    .steps {
+      list-style: none;
+      counter-reset: step;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .steps li {
+      counter-increment: step;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-top: 3px solid var(--gold);
+      border-radius: 14px;
+      padding: 1.6rem 1.5rem 1.7rem;
+    }
+    .steps li::before {
+      content: counter(step);
+      display: block;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: var(--gold);
+      margin-bottom: 0.7rem;
+    }
+    .steps h3 { font-size: 1.12rem; font-weight: 700; margin-bottom: 0.4rem; color: #fff; }
+    .steps p { color: var(--muted); font-size: 0.98rem; }
+
+    /* Features */
+    .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .feature {
+      padding: 1.8rem;
+      border-radius: 16px;
+      background: linear-gradient(160deg, var(--panel-2), var(--panel));
+      border: 1px solid rgba(47, 140, 255, 0.22);
+    }
+    .feature h3 { font-family: var(--display); font-size: 1.6rem; color: var(--gold-light); margin-bottom: 0.4rem; }
+    .feature p { color: var(--muted); }
+
+    /* Curriculum */
+    .levels { background: var(--bg-deep); border-block: 1px solid rgba(255, 255, 255, 0.06); }
+    .level-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .level {
+      padding: 1.4rem 1.4rem 1.5rem;
+      border-radius: 14px;
+      border: 1px solid var(--gold-line);
+      background: rgba(242, 177, 52, 0.04);
+    }
+    .level h3 { font-family: var(--display); font-size: 1.5rem; color: var(--gold-light); margin-bottom: 0.3rem; }
+    .level p { color: var(--muted); font-size: 0.97rem; }
+
+    /* Final CTA */
+    .final {
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 100% at 50% 100%, rgba(139, 92, 246, 0.22), transparent 70%),
+        var(--bg);
+    }
+    .final .section-title { margin-inline: auto; }
+    .final .section-title::after { margin-inline: auto; }
+    .final p { color: var(--muted); max-width: 32rem; margin: 0 auto 2rem; }
+
+    /* Keep landing footer height aligned with the shared dashboard footer. */
+    .landing-page .site-footer { margin-top: 16px; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 960px) {
+      .hero { padding: 3rem 0 4rem; overflow: hidden; }
+      .hero .wrap { grid-template-columns: 1fr; gap: 2.5rem; text-align: center; }
+      .lede { margin-inline: auto; }
+      .cta-row { justify-content: center; }
+      .hero-logo { order: -1; }
+      .logo-live { width: min(300px, 70vw); }
+      .steps, .level-list { grid-template-columns: repeat(2, 1fr); }
+      section { padding: 3.75rem 0; }
+    }
+    @media (max-width: 620px) {
+      body { font-size: 1rem; }
+      .nav a:not(.btn) { display: none; }
+      .brand span { font-size: 1.45rem; }
+      .brand img { width: 40px; height: 40px; }
+      .steps, .level-list, .features { grid-template-columns: 1fr; }
+      .cta-row .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn, .nav a { transition: none; }
+      .btn:hover { transform: none; }
+      .logo-live *, .hero-logo::before { animation: none !important; }
+      .logo-fx { display: none; }
+    }
+  </style>
+  <link rel="stylesheet" href="/static/css/snake-background.css">
+  <link rel="stylesheet" href="/static/css/site-polish.css">
+  <link rel="stylesheet" href="/static/css/legal-safety.css">
+  <script src="/static/js/accessibility-settings.js" defer></script>
+  <script src="/static/js/snake-background-motion.js" defer></script>
+</head>
+
+<body class="landing-page">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/" aria-label="Grapsy home">
+        <img src="/static/img/logo-badge.png" alt="" width="46" height="46">
+        <span>Grapsy</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#how">How it works</a>
+        <a href="#curriculum">Curriculum</a>
+        <a href="/projects">Projects</a>
+        <a href="/login">Log in</a>
+        <a class="btn" href="/signup">Sign up</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="wrap">
+        <div>
+          <span class="tagline">Learn. Build. Grow.</span>
+          <h1>Learn Python from where you actually are.</h1>
+          <p class="lede">
+            Grapsy tests what you already know, teaches the topics you haven't
+            mastered, and changes what comes next after every answer you give.
+          </p>
+          <div class="cta-row">
+            <a class="btn" href="/signup">Start the diagnostic test</a>
+            <a class="btn ghost" href="#how">See how it works</a>
+          </div>
+        </div>
+
+        <div class="hero-logo">
+          <div class="logo-live" id="logoLive">
+            <div class="logo-stage">
+              <img class="logo-img" src="../static/img/logo-badge.png" alt="Grapsy logo: a G with a code symbol and a network of connected nodes. Learn, Build, Grow." width="900" height="900">
+              <svg class="logo-fx" viewBox="0 0 900 900" aria-hidden="true" focusable="false">
+                <defs>
+                  <clipPath id="discClip"><circle cx="450" cy="450" r="446"/></clipPath>
+                  <linearGradient id="sweepGrad" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+                    <stop offset=".5" stop-color="#fff" stop-opacity=".6"/>
+                    <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+                  </linearGradient>
+                  <radialGradient id="codeGlow">
+                    <stop offset="0" stop-color="#29D0FF" stop-opacity=".6"/>
+                    <stop offset="1" stop-color="#29D0FF" stop-opacity="0"/>
+                  </radialGradient>
+                  <path id="spark" d="M0 -16 Q1.6 -1.6 16 0 Q1.6 1.6 0 16 Q-1.6 1.6 -16 0 Q-1.6 -1.6 0 -16Z"/>
+                </defs>
+
+                <g clip-path="url(#discClip)">
+                  <ellipse class="code-glow" cx="419" cy="321" rx="95" ry="50" fill="url(#codeGlow)"/>
+          <circle class="ping" style="--i:0" cx="484" cy="137" r="20" fill="#29B6FF"/>
+          <circle class="ping" style="--i:1" cx="435" cy="203" r="20" fill="#29B6FF"/>
+          <circle class="ping" style="--i:2" cx="577" cy="171" r="20" fill="#2F8CFF"/>
+          <circle class="ping" style="--i:3" cx="528" cy="218" r="20" fill="#29B6FF"/>
+          <circle class="ping" style="--i:4" cx="649" cy="220" r="20" fill="#6E7BFF"/>
+          <circle class="ping" style="--i:5" cx="598" cy="265" r="20" fill="#6A74F5"/>
+          <circle class="ping" style="--i:6" cx="665" cy="309" r="20" fill="#B26BFF"/>
+          <circle class="ping" style="--i:7" cx="610" cy="352" r="20" fill="#2F8CFF"/>
+          <circle class="ping" style="--i:8" cx="662" cy="392" r="20" fill="#9F6BFF"/>
+          <circle class="ping" style="--i:9" cx="579" cy="422" r="20" fill="#2F8CFF"/>
+                  <g class="sweep"><rect x="0" y="-200" width="150" height="1300" fill="url(#sweepGrad)" transform="rotate(18 75 450)"/></g>
+                </g>
+
+                <circle class="ripple" cx="450" cy="450" r="440" fill="none" stroke="#FFD772" stroke-width="6"/>
+                <circle class="orbit" cx="450" cy="450" r="440" pathLength="100" fill="none" stroke="#FFF3C4" stroke-width="9" stroke-linecap="round" stroke-dasharray="6 94"/>
+                <circle class="orbit orbit-b" cx="450" cy="450" r="440" pathLength="100" fill="none" stroke="#7FD0FF" stroke-width="9" stroke-linecap="round" stroke-dasharray="4 96"/>
+          <g transform="translate(168 498)"><use class="spark" style="--d:0s" href="#spark" fill="#FFF3C4"/></g>
+          <g transform="translate(402 492)"><use class="spark" style="--d:1.1s" href="#spark" fill="#FFF3C4"/></g>
+          <g transform="translate(603 482)"><use class="spark" style="--d:2.2s" href="#spark" fill="#FFF3C4"/></g>
+          <g transform="translate(792 500)"><use class="spark" style="--d:0.6s" href="#spark" fill="#FFF3C4"/></g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <section class="how" id="how">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">A teacher that changes its mind about what you need</h2>
+          <p class="section-intro">Every answer updates what Grapsy knows about you. The loop repeats until each topic sticks.</p>
+        </div>
+
+        <ol class="steps">
+          <li>
+            <h3>Take the diagnostic</h3>
+            <p>Answer a short set of questions. You get a result for each topic, not one grade for everything.</p>
+          </li>
+          <li>
+            <h3>Get your plan</h3>
+            <p>Grapsy builds a learning path from your goal, your weak topics, and the time you have each week.</p>
+          </li>
+          <li>
+            <h3>Study a short lesson</h3>
+            <p>Each lesson has an explanation, a worked example, and hints that start small.</p>
+          </li>
+          <li>
+            <h3>Practice and get feedback</h3>
+            <p>When an answer is wrong, you learn why, with a new example for that exact mistake.</p>
+          </li>
+          <li>
+            <h3>See your mastery change</h3>
+            <p>Topic scores move as you improve, so you can see what you've actually learned.</p>
+          </li>
+          <li>
+            <h3>Review before you forget</h3>
+            <p>Topics you missed come back later, until you get them right on your own.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">More than a chatbot with lessons</h2>
+          <p class="section-intro">The AI explains. Grapsy remembers what you know, what you miss, and what to teach next.</p>
+        </div>
+
+        <div class="features">
+          <div class="feature">
+            <h3>Topic-level mastery</h3>
+            <p>See which parts of Python you know and which you don't, from variables to recursion.</p>
+          </div>
+          <div class="feature">
+            <h3>Mistake tracking</h3>
+            <p>Mixing up parameters and arguments? Grapsy spots repeated mistakes and teaches the idea behind them.</p>
+          </div>
+          <div class="feature">
+            <h3>Hints before answers</h3>
+            <p>Hints go from a small clue to a full explanation, so you try first and never stay stuck.</p>
+          </div>
+          <div class="feature">
+            <h3>Difficulty that adapts</h3>
+            <p>Doing well makes problems harder. Struggling brings you back to the idea you're missing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Curriculum -->
+    <section class="levels" id="curriculum">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title">The Python path, from first line to real projects</h2>
+          <p class="section-intro">Topics are linked, so Grapsy can tell when a missing basic idea is what's holding you back.</p>
+        </div>
+
+        <div class="level-list">
+          <div class="level">
+            <h3>Beginner</h3>
+            <p>Variables, data types, input and output, operators, conditions</p>
+          </div>
+          <div class="level">
+            <h3>Basic</h3>
+            <p>Loops, strings, lists, tuples, sets, dictionaries</p>
+          </div>
+          <div class="level">
+            <h3>Intermediate</h3>
+            <p>Functions, modules, exceptions, files, comprehensions</p>
+          </div>
+          <div class="level">
+            <h3>Advanced</h3>
+            <p>OOP, decorators, generators, iterators, testing</p>
+          </div>
+          <div class="level">
+            <h3>Professional</h3>
+            <p>APIs, databases, FastAPI, Git, deployment</p>
+          </div>
+          <div class="level">
+            <h3>AI and data</h3>
+            <p>NumPy, pandas, visualization, machine learning basics, projects</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final">
+      <div class="wrap">
+        <h2 class="section-title">Find out what you don't know yet</h2>
+        <p>The diagnostic test shows your level in every topic and sets your first lesson.</p>
+        <a class="btn" href="/signup">Create your account</a>
+      </div>
+    </section>
+  </main>
+
+  {% include "legal_footer.html" %}
+
+</body>
+</html>
